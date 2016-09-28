@@ -10,9 +10,9 @@ const Fowl = require('../model/fowl.js');
 
 require('../server.js');
 
-const url = `http://localhost:${PORT}`
+const url = `http://localhost:${PORT}`;
 const exampleFowl = {
-  name: 'Jeff'
+  name: 'Jeff',
 };
 
 describe('testing route /api/note', function() {
@@ -41,31 +41,33 @@ describe('testing route /api/note', function() {
           this.tempFowl = res.body;
           done();
         });
-      })
-    })
-  })
+      });
+    });
+  });
   describe('testing GET requests', function() {
 
     describe('with valid body', function() {
 
       before( done => {
+        exampleFowl.timestamp = new Date();
         new Fowl(exampleFowl).save()
         .then( fowl => {
           this.tempFowl = fowl;
           done();
         })
         .catch(done);
-      })
+      });
 
-      after( done=> {
+      after( done => {
+        delete exampleFowl.timestamp;
         if(this.tempFowl) {
           Fowl.remove({})
           .then(() => done())
           .catch(done);
           return;
         }
+        done();
       });
-
 
       it('should return a fowl', done => {
         request.get(`${url}/api/fowl/${this.tempFowl._id}`)
@@ -76,7 +78,7 @@ describe('testing route /api/note', function() {
           this.tempFowl = res.body;
           done();
         });
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});
