@@ -138,7 +138,25 @@ describe('testing route /api/portfolio', function(){
           done();
         });
       });
-
+      it('should return a 400 status code', done => {
+        let updatedPortfolio = 'justastupidstring';
+        request.put(`${url}/api/portfolio/${this.tempPortfolio._id}`)
+        .set('Content-Type', 'application/json')
+        .send(updatedPortfolio)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+      it('should return a 404 status code', done => {
+        let updatedPortfolio = {name: 'pudgey pudge', about:'bout that pudge', projects:'project pudge face', work:'pudge life'};
+        request.put(`${url}/api/portfolio/${this.tempPortfolio.cheese}`)
+        .send(updatedPortfolio)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
     });
   });
 });
