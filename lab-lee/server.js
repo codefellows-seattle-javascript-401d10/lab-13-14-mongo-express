@@ -10,6 +10,7 @@ const debug = require('debug')('fowl:server');
 
 // app modules
 const fowlRouter = require('./route/fowl-route');
+const errorMiddleware = require('./lib/error-middleware.js');
 
 // module constants
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use(cors());
 
 // routes
 app.use(fowlRouter);
+app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function() {
   debug(`server up at ${PORT}`);
