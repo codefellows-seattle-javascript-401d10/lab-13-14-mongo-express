@@ -9,7 +9,7 @@ const Promise = require('bluebird');
 const debug = require('debug')('school:server');
 
 // app modules 
-//const listRouter = require('./route/list-route.js');
+const schoolRouter = require('./route/school-route.js');
 
 // module constants
 const PORT = process.env.PORT || 3000;
@@ -25,7 +25,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 // routes
-//app.use(listRouter);
+app.use(schoolRouter);
 
 const server = module.exports = app.listen(PORT, function(){
   debug(`server up on ${PORT}`);

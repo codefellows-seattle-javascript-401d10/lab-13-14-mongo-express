@@ -27,13 +27,55 @@ describe('Testing API', function() {
       request.get(`${url}/api/unRegistereg_URL`)
       .end((err, res) => {
         expect(res.status).to.be.equal(404);
+        expect(err).to.not.be.null;
         done();
       });
     });
   });
 
   describe('Testing api/school', function() {
+    describe('Testing POST requests', function() {
+      describe('POST - test 400, responds with \'bad request\' for if no body provided or invalid body', function() {
+        
+      });
+
+      describe('POST - test 200, response body like {<data>} for a post request with a valid body', function() {
+        
+        // after( done => {
+        //   new School(exampleSchool).save()
+        //   .then( school => {
+        //     this.tempSchool = school;
+        //     done();
+        //   })
+        // .catch(done);
+        // });
+
+        it('Testing a post request with a valid body', done => {
+          request.post(`${url}/api/school`)
+          .send(exampleSchool)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).to.equal(200);
+            this.tempSchool = res.body;
+            done();
+          });
+        });
+
+      });
+    });
+
+    describe('Testing GET requests', function() {
+
+    });
+
+    describe('Testing PUT requests', function() {
+
+    });
+
+    describe('Testing DELETE requests', function() {
+
+    });
 
   });
-
 });
+
