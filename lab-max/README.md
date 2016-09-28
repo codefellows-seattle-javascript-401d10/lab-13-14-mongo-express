@@ -18,9 +18,9 @@ This will install all dependencies for this project, including:
 - debug
 - express
 - http-errors
-- mkdirp
+- mongoose
 - morgan
-- node-uuid
+- cors
 - chai
 - gulp
 - gulp-eslint
@@ -54,7 +54,7 @@ http localhost:3000/api/store/(some id in database)
 
 and that will return the object with properties: id, timestamp, name, year, storeType.
 
-A GET request resulting in a 404 status error will return if a pizza at a specified id isn't found.
+A GET request resulting in a 404 status error will return if a store at a specified id isn't found.
 
 ```
 http localhost:3000/api/store/99999
