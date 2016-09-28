@@ -112,9 +112,27 @@ describe('Testing API', function() {
     });
 
     describe('Testing DELETE requests', function() {
+      describe('DELETE - test 204, with no body, for a request with a valid id', function() {
+        
+        before(done => {
+          new School(exampleSchool).save()
+            .then(school => {
+              this.tempSchool = school;
+              done();
+            })
+            .catch(done);
+        });
 
+        it('Testing a DELETE request with no body, with a valid id', done => {
+          request.delete(`${url}/api/school/${this.tempSchool._id}`)
+          .end((err, res) => {
+            expect(res.status).to.equal(204);
+            //expect(res.err).to.be.null;
+            done();
+          });
+        });
+      });
     });
 
   });
 });
-

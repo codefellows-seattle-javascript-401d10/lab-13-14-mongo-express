@@ -9,6 +9,13 @@ const School = require('../model/school.js');
 const schoolRouter = module.exports = new Router();
 const debug = require('debug')('school:route');
 
+schoolRouter.get('/api/school/:id', function(req, res, next){
+  debug('api/school GET request');
+  School.findById(req.params.id)
+  .then(school => res.json(school))
+  .catch(err => next(createError(404, err.message)));
+});
+
 schoolRouter.post('/api/school', jsonParser, function(req, res, next){
   debug('api/school POST request');
   new School(req.body).save()
@@ -16,9 +23,9 @@ schoolRouter.post('/api/school', jsonParser, function(req, res, next){
   .catch(next);
 });
 
-schoolRouter.get('/api/school/:id', function(req, res, next){
-  debug('api/school GET request');
+schoolRouter.delete('/api/school/:id', function(req, res, next){
+  debug('api/school DELETE request');
   School.findById(req.params.id)
-  .then(school => res.json(school))
+  .then(() => res.sendStatus(204))
   .catch(err => next(createError(404, err.message)));
 });
