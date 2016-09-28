@@ -94,15 +94,14 @@ describe('testing route /api/note', function() {
 
     describe('with a file that doesn\'t exist', function() {
 
-      it('should give a 404 invalid id', (done => {
+      it('should give a 404 id not found', done => {
         request.get(`${url}/api/fowl/nope-duck`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           done();
         });
-      }));
+      });
     });
-
   });
 
   describe('Testing PUT /api/fowl:id requests', function() {

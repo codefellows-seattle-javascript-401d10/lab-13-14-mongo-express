@@ -17,7 +17,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/fowldev';
 
 // connect to database
 mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI)
+mongoose.connect(MONGODB_URI);
 
 // app middleware
 const app = express();
@@ -28,7 +28,7 @@ app.use(cors());
 app.use(fowlRouter);
 
 const server = module.exports = app.listen(PORT, function() {
-  debug(`server up at ${PORT}`)
+  debug(`server up at ${PORT}`);
 });
 
 server.isRunning = true;
