@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "DEBUG='note*' node server.js",
-    "test": "DEBUG='note*' ./node_modules/mocha/bin/mocha"
+    "start": "DEBUG='portfolio*' node server.js",
+    "test": "DEBUG='portfolio*' ./node_modules/mocha/bin/mocha"
   },
   "keywords": [],
   "author": "",
