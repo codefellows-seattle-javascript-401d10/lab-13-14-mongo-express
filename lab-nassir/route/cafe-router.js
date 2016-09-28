@@ -16,11 +16,19 @@ cafeRouter.post('/api/cafe', jsonParser, function(req, res, next){
   .catch(err => next(createError(400, err.message)));
 });
 
+cafeRouter.get('/api/cafe/', function(req, res, next){
+  debug('Hit GET route WITH NO ID');
+  Cafe.find({})
+  .then(array => res.json(array))
+  .catch(err => next(createError(404, err.message)));
+});
+
 cafeRouter.get('/api/cafe/:id', function(req, res, next){
   debug('Hit GET route');
   Cafe.findById(req.params.id)
   .then(cafe => res.json(cafe))
   .catch(err => next(createError(404, err.message)));
+  return;
 });
 
 cafeRouter.delete('/api/cafe/:id', function(req, res, next){
