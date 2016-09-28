@@ -27,14 +27,14 @@ fowlRouter.get('/api/fowl/:id', function(req, res, next) {
 
 fowlRouter.delete('/api/fowl/:id', function(req, res, next) {
   debug('hit route DELETE /api/fowl');
-  Fowl.deleteFowl(req.params.id)
+  Fowl.findByIdAndRemove(req.params.id)
   .then( () => res.sendStatus(204))
   .catch(err => next(createError(404, err.message)));
 });
 
 fowlRouter.put('/api/fowl/:id', jsonParser, function(req, res, next) {
   debug('hit route PUT /api/fowl/:id');
-  Fowl.updateFowl(req.params.id, req.body)
+  Fowl.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then(fowl => res.json(fowl))
   .catch(err => next(createError(404, err.message)));
 });
