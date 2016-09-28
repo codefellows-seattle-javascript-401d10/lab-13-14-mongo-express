@@ -145,9 +145,31 @@ describe('testing route /api/note', function() {
 
     describe('with no body provided', function() {
 
+      before( done => {
+        exampleFowl.timestamp = new Date();
+        new Fowl(exampleFowl).save()
+        .then( fowl => {
+          this.tempFowl = fowl;
+          done();
+        })
+        .catch(done);
+      });
+
+      after( done => {
+        delete exampleFowl.timestamp;
+        if(this.tempFowl) {
+          Fowl.remove({})
+          .then(() => done())
+          .catch(done);
+          return;
+        }
+        done();
+      });
+
       it('should return a 400 bad request', done => {
         request.put(`${url}/api/fowl/${this.tempFowl._id}`)
-        .send({fur: 'stuff'})
+        .set('Content-Type', 'application/json')
+        .send('hello')
         .end((err, res) => {
           expect(res.status).to.equal(400);
           done();
