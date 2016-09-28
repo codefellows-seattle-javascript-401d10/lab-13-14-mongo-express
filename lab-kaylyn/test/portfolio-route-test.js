@@ -159,4 +159,33 @@ describe('testing route /api/portfolio', function(){
       });
     });
   });
+  describe('testing DELETE requests', function(){
+    describe('testing DELETE with valid id', function(){
+      before( done => {
+        examplePortfolio.timestamp = new Date();
+        new Portfolio(examplePortfolio).save()
+        .then( portfolio => {
+          this.tempPortfolio = portfolio;
+          done();
+        })
+        .catch(done);
+      });
+      it('should return a status code 0f 204', done => {
+        request.delete(`${url}/api/portfolio/${this.tempPortfolio._id}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(204);
+          done();
+        });
+      });
+      describe('testing DELETE requests with invaid id', function(){
+        it('should return a status code of 404', done => {
+          request.delete(`${url}/api/portfolio`)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            done();
+          });
+        });
+      });
+    });
+  });
 });

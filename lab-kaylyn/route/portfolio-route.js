@@ -34,7 +34,7 @@ portfolioRouter.put('/api/portfolio/:id', jsonParser, function(req, res, next){
 
 portfolioRouter.delete('/api/portfolio/:id', function(req, res, next){
   debug('hit route DELETE /api/portfolio');
-  Portfolio.findById(req.params.id)
+  Portfolio.findById(req.params.id).remove()
   .then(() => res.status(204).send())
   .catch(err => next(createError(404, err.message)));
 });
