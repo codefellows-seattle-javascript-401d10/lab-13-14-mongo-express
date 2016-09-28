@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schoolSchema = Schema ({
-  id: { type:'string', require:true },
   name: { type:'String', required:true },
   Type: { type:'String', required:true },
   state: { type:'String', required: true },

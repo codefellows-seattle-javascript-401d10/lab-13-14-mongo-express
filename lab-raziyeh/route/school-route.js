@@ -2,7 +2,7 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-const uuid = require('node-uuid');
+const createError = require('http-errors');
 
 const School = require('../model/school.js');
 
@@ -11,14 +11,14 @@ const debug = require('debug')('school:route');
 
 schoolRouter.post('/api/school', jsonParser, function(req, res, next){
   debug('api/school POST request');
-  req.body.id = uuid.v1();
   new School(req.body).save()
   .then(school => res.json(school))
   .catch(next);
 });
 
-schoolRouter.get('/api/list/:id', function(req, res, next){
+schoolRouter.get('/api/school/:id', function(req, res, next){
+  debug('api/school GET request');
   School.findById(req.params.id)
   .then(school => res.json(school))
-  .catch(next);
+  .catch(err => next(createError(404, err.message)));
 });
