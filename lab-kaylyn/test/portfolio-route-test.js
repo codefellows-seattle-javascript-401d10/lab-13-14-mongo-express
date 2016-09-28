@@ -46,6 +46,16 @@ describe('testing route /api/portfolio', function(){
         });
       });
     });
+    describe('testing POST with invalid body or no body provided', function(){
+      it('should return a 400 status code', done => {
+        request.post(`${url}/api/portfolio`)
+        .send({})
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
   });
 
   describe('testing GET requests', function(){
@@ -80,6 +90,15 @@ describe('testing route /api/portfolio', function(){
           expect(res.body.about).to.equal('about pudge');
           expect(res.body.projects).to.equal('projects of pudge');
           expect(res.body.work).to.equal('pudge work');
+          done();
+        });
+      });
+    });
+    describe('testing GET request with invalid id', function(){
+      it('should return a 404 status code', done => {
+        request.get(`${url}/api/portfolio/666`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
           done();
         });
       });

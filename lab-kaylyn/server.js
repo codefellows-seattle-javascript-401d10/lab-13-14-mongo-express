@@ -10,6 +10,7 @@ const debug = require('debug')('portfolio:server');
 
 // app modules
 const portfolioRouter = require('./route/portfolio-route.js');
+const errorMiddleWare = require('./lib/error-middleware.js');
 
 // module constants
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use(morgan('dev'));
 
 // routes
 app.use(portfolioRouter);
+app.use(errorMiddleWare);
 
 const server = module.exports = app.listen(PORT, function(){
   debug(`server up ${PORT}`);
