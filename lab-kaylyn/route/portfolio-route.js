@@ -29,12 +29,12 @@ portfolioRouter.put('/api/portfolio/:id', jsonParser, function(req, res, next){
   debug('hit route PUT /api/porfolio');
   Portfolio.findById(req.params.id, req.body)
   .then( portfolio => res.json(portfolio))
-  .catch(next);
+  .catch(err => next(createError(404, err.message)));
 });
 
 portfolioRouter.delete('/api/portfolio/:id', function(req, res, next){
   debug('hit route DELETE /api/portfolio');
   Portfolio.findById(req.params.id)
   .then(() => res.status(204).send())
-  .catch( err => next(err));
+  .catch(err => next(createError(404, err.message)));
 });
