@@ -10,6 +10,7 @@ const debug = require('debug')('school:server');
 
 // app modules 
 const schoolRouter = require('./route/school-route.js');
+const errorMiddleware = require('./lib/error-middleware.js');
 
 // module constants
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,8 @@ app.use(morgan('dev'));
 
 // routes
 app.use(schoolRouter);
+//it's important that errorMiddleware be added after model router'
+app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function(){
   debug(`server up on ${PORT}`);

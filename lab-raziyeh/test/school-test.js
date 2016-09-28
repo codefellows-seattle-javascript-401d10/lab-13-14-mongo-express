@@ -5,6 +5,8 @@ process.env.MONGODB_URI = 'mongodb://localhost/notetest';
 
 const expect = require('chai').expect;
 const request = require('superagent');
+const uuid = require('node-uuid');
+
 const School = require('../model/school.js');
 
 require('../server.js');
@@ -36,19 +38,28 @@ describe('Testing API', function() {
   describe('Testing api/school', function() {
     describe('Testing POST requests', function() {
       describe('POST - test 400, responds with \'bad request\' for if no body provided or invalid body', function() {
-        
+        it('Testing a post request if no body provided or invalid body', done => {
+          request.post(`${url}/api/school`)
+          .send({name:''})
+          .end((err, res) => {
+            expect(res.status).to.equal(400);
+            expect(res.err).to.not.be.null;
+            done();
+          });
+        });
       });
 
       describe('POST - test 200, response body like {<data>} for a post request with a valid body', function() {
         
-        // after( done => {
-        //   new School(exampleSchool).save()
-        //   .then( school => {
-        //     this.tempSchool = school;
-        //     done();
-        //   })
-        // .catch(done);
-        // });
+        before( done => {
+          exampleSchool.id = uuid.v1();
+          new School(exampleSchool).save()
+         .then( school => {
+           this.tempSchool = school;
+           done();
+         })
+        .catch(done);
+        });
 
         it('Testing a post request with a valid body', done => {
           request.post(`${url}/api/school`)
@@ -65,7 +76,37 @@ describe('Testing API', function() {
     });
 
     describe('Testing GET requests', function() {
+      describe('GET - test 200, response body like {<data>} for a request made with a valid id', function() {
+        before(done => {
+          exampleSchool.id = uuid.v1();
+          new School(exampleSchool).save()
+            .then(school => {
+              this.tempSchool = school;
+              done();
+            })
+            .catch(done);
+        });
 
+        it('Testing a GET request made with a valid id', done => {
+          request.get(`${url}/api/school/${this.tempSchool._id}`)
+          .end((err, res) => {
+            expect(res.status).to.be.equal(200);
+            done();
+          });
+        });
+      });
+
+      describe('GET - test 404, responds with \'not found\' for valid request made with an id that was not found', function() {
+        it('Testing a GET request with an id that was not found', done => {
+          request.get(`${url}/api/school/${1112}`)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.err).to.not.be.null;
+            done();
+          });
+        });
+
+      });
     });
 
     describe('Testing PUT requests', function() {
