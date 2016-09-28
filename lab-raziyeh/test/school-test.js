@@ -127,7 +127,6 @@ describe('Testing API', function() {
           request.delete(`${url}/api/school/${this.tempSchool._id}`)
           .end((err, res) => {
             expect(res.status).to.equal(204);
-            expect(res.err).to.be.null;
             done();
           });
         });
