@@ -57,7 +57,6 @@ describe('testing route /api/portfolio', function(){
       });
     });
   });
-
   describe('testing GET requests', function(){
     describe('with valid body', function(){
       before( done => {
@@ -69,7 +68,6 @@ describe('testing route /api/portfolio', function(){
         })
         .catch(done);
       });
-
       after( done => {
         delete examplePortfolio.timestamp;
         if(this.tempPortfolio){
@@ -80,7 +78,6 @@ describe('testing route /api/portfolio', function(){
         }
         done();
       });
-
       it('should return a portfolio', done => {
         request.get(`${url}/api/portfolio/${this.tempPortfolio._id}`)
         .end((err, res) => {
@@ -102,6 +99,46 @@ describe('testing route /api/portfolio', function(){
           done();
         });
       });
+    });
+  });
+  describe('testing PUT requests', function(){
+    describe('testing PUT with valid body and id', function(){
+      before( done => {
+        examplePortfolio.timestamp = new Date();
+        new Portfolio(examplePortfolio).save()
+        .then( portfolio => {
+          this.tempPortfolio = portfolio;
+          done();
+        })
+        .catch(done);
+      });
+      after( done => {
+        delete examplePortfolio.timestamp;
+        if(this.tempPortfolio){
+          Portfolio.remove({})
+          .then(() => done())
+          .catch(done);
+          return;
+        }
+        done();
+      });
+      it('should return an updated portfolio', done => {
+        let updatedPortfolio = {name: 'pudgey pudge', about:'bout that pudge', projects:'project pudge face', work:'pudge life'};
+        request.put(`${url}/api/portfolio/${this.tempPortfolio._id}`)
+        .send(updatedPortfolio)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.id).to.equal(updatedPortfolio._id);
+          expect(res.body.name).to.equal(updatedPortfolio.name);
+          expect(res.body.about).to.equal(updatedPortfolio.about);
+          expect(res.body.projects).to.equal(updatedPortfolio.projects);
+          expect(res.body.work).to.equal(updatedPortfolio.work);
+          updatedPortfolio = res.body;
+          done();
+        });
+      });
+
     });
   });
 });

@@ -27,7 +27,7 @@ portfolioRouter.get('/api/portfolio/:id', function(req, res, next){
 
 portfolioRouter.put('/api/portfolio/:id', jsonParser, function(req, res, next){
   debug('hit route PUT /api/porfolio');
-  Portfolio.findById(req.params.id, req.body)
+  Portfolio.findByIdAndUpdate(req.params.id, req.body, {new:true})
   .then( portfolio => res.json(portfolio))
   .catch(err => next(createError(404, err.message)));
 });
