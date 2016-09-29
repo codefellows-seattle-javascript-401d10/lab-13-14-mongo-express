@@ -1,10 +1,11 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const debug = require('debug')('series:series');
 const Schema = mongoose.Schema;
 const createError = require('http-errors');
 
-const Book = require('./book');
+const Book = require('./book.js');
 
 const seriesSchema = Schema({
   title: {type: String, required: true},
@@ -16,6 +17,7 @@ const seriesSchema = Schema({
 const Series = module.exports = mongoose.model('series', seriesSchema);
 
 Series.findByIdAndAddBook = function(id, book){
+  debug('findByIdAndAddBook');
   Series.findById(id)
   .catch(err => Promise.reject(createError(400, err.message)))
   .then(series => {

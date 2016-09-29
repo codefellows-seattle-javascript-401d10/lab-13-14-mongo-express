@@ -1,6 +1,9 @@
 'use strict';
 
+const debug = require('debug')('series:page-middleware');
+
 module.exports = function(req, res, next){
+  debug('page-middleware');
   req.query.page = req.query.page || 0;
   req.query.pagesize = req.query.pagesize || 50;
   req.query.offset = 0;

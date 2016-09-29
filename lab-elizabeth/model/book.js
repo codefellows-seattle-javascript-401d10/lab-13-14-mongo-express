@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const debug = require('debug')('series:book');
 
 const Schema = mongoose.Schema;
 
