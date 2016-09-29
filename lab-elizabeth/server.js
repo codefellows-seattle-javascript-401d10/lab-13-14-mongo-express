@@ -9,7 +9,9 @@ const mongoose = require('mongoose');
 const debug = require('debug')('series:server');
 
 // app modules
-const seriesRouter = require('./route/series-router');
+const seriesRouter = require('./route/series-route');
+const bookRouter = require('./route/book-route');
+const errorMiddleware = require('./lib/error-middleware');
 
 // module constants
 const PORT = process.env.PORT || 3000;
@@ -26,9 +28,11 @@ app.use(morgan('dev'));
 
 // routes
 app.use(seriesRouter);
+app.use(bookRouter);
+app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function(){
-  debug(`server up! <(0v0)> ${PORT}`);
+  debug(`server up, mate! <(0v0)> ${PORT}`);
 });
 
 server.isRunning = true;
