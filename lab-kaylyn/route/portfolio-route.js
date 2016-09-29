@@ -29,12 +29,15 @@ portfolioRouter.put('/api/portfolio/:id', jsonParser, function(req, res, next){
   debug('hit route PUT /api/porfolio');
   Portfolio.findByIdAndUpdate(req.params.id, req.body, {new:true})
   .then( portfolio => res.json(portfolio))
-  .catch(err => next(createError(404, err.message)));
+  .catch(err => {
+    if(err.name === 'ValidationError') return next(err); //mongoose always handles validation erros so it's already taken care of in the middleware error handlling logic 
+    next(createError(404, err.message));
+  });
 });
 
 portfolioRouter.delete('/api/portfolio/:id', function(req, res, next){
   debug('hit route DELETE /api/portfolio');
-  Portfolio.findById(req.params.id).remove()
+  Portfolio.findByIdAndRemove(req.params.id)
   .then(() => res.status(204).send())
   .catch(err => next(createError(404, err.message)));
 });

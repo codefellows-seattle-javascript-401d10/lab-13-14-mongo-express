@@ -123,7 +123,12 @@ describe('testing route /api/portfolio', function(){
         done();
       });
       it('should return an updated portfolio', done => {
-        let updatedPortfolio = {name: 'pudgey pudge', about:'bout that pudge', projects:'project pudge face', work:'pudge life'};
+        let updatedPortfolio = {
+          name: 'pudgey pudge',
+          about:'bout that pudge',
+          projects:'project pudge face',
+          work:'pudge life',
+        };
         request.put(`${url}/api/portfolio/${this.tempPortfolio._id}`)
         .send(updatedPortfolio)
         .end((err, res) => {
@@ -134,7 +139,7 @@ describe('testing route /api/portfolio', function(){
           expect(res.body.about).to.equal(updatedPortfolio.about);
           expect(res.body.projects).to.equal(updatedPortfolio.projects);
           expect(res.body.work).to.equal(updatedPortfolio.work);
-          updatedPortfolio = res.body;
+          this.tempPortfolio = res.body;
           done();
         });
       });
