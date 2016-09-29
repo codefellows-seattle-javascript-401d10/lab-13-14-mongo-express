@@ -62,3 +62,13 @@ echo '{"name": "<name>", "about": "<content>", "projects": "<content>", "work": 
 ```
 echo '{"name": "", "about": "", "projects": "", "work": ""}' | http POST localhost:3000/api/portfolio/<id>
 ```
+
+##DELETE
+* A valid DELETE request will result in a status code of 204:
+```
+http DELETE localhost:3000/api/portfolio/<id>
+```
+* An invalid DELETE request will result in a status code of 404 for an invalid id or id that was not found:
+```
+http DELETE localhost:3000/api/portfolio/<invalid id or missing id>
+```
