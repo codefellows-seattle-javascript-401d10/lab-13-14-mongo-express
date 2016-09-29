@@ -20,7 +20,7 @@ schoolRouter.get('/api/school/', function(req, res, next){
   debug('api/school GET request without id');
   School.find()
   .then(school => res.json(school))
-  .catch(err => next(err));
+  .catch(err => next(createError(404, err.message)));
 });
 
 schoolRouter.post('/api/school', jsonParser, function(req, res, next){
@@ -34,13 +34,16 @@ schoolRouter.put('/api/school/:id', jsonParser, function(req, res, next){
   debug('api/school PUT request');
   School.findByIdAndUpdate(req.params.id,req.body, {new: true})
   .then(school => res.json(school))
-  .catch(err => next(createError(404, err.message)));
+  .catch(err => {
+    if(err.name === 'ValidarionError') return next(err);
+    next(createError(404, err.message));
+  });
 });
 
 
 schoolRouter.delete('/api/school/:id', function(req, res, next){
   debug('api/school DELETE request');
-  School.findById(req.params.id)
+  School.findByIdAndRemove(req.params.id)
   .then(() => res.sendStatus(204))
   .catch(err => next(createError(404, err.message)));
 });
