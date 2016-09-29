@@ -27,16 +27,6 @@ personRouter.get('/api/list/person/:personID', jsonParser, function(req, res, ne
   .catch(err => next(createError(404, err.message)));
 });
 
-//TODO: This probably isn't right
-personRouter.put('/api/list/:listID/person', jsonParser, function(req, res, next){
-  debug('running person PUT');
-  List.persons.findByIdAndUpdate(req.params.listID, req.body, {new: true})
-  .then( persons => res.json(persons))
-  .catch(err => {
-    if (err.name === 'ValidationError') return next (err);
-    next(createError(404, err.message));
-  });
-});
 
 personRouter.delete('/api/list/:listID/person/:personID', function(req, res, next){
   debug('running person DELETE');
