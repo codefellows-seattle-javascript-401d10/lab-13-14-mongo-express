@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "DEBUG='school*' node server.js",
-    "test": "DEBUG='school*' ./node_modules/mocha/mocha.js"
+    "test": "DEBUG='school*' ./node_modules/mocha/bin/mocha"
   },
   "keywords": [],
   "author": "",

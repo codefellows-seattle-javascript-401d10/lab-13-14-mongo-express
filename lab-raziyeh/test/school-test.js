@@ -108,7 +108,54 @@ describe('Testing API', function() {
     });
 
     describe('Testing PUT requests', function() {
+      var tempSchool;
+      describe('PUT - test 200, response body like {<data>} for a post request with a valid body', () => {
+        before(done => {
+          new School(exampleSchool).save()
+            .then(school => {
+              tempSchool = school;
+              done();
+            })
+            .catch(done);
+        });
 
+        // after(done => {
+        //   tempSchool.remove({})
+        //     .then(() => done())
+        //     .catch(done);
+        // });
+        
+        it('Testing a PUT request made with a valid id', done => {
+          request.put(`${url}/api/school/${tempSchool._id}`)
+          .send({name:'gggg'})
+          .end((err, res) => {
+            if(err) done(err);
+            expect(res.status).to.equal(200);
+            done();
+          });
+        });
+      });
+
+      describe('PUT - test 400, responds with \'bad request\' for if no body provided or invalid body', () => {
+        before(done => {
+          new School(exampleSchool).save()
+            .then(school => {
+              this.tempSchool = school;
+              done();
+            })
+            .catch(done);
+        });
+        it('Testing a PUT request made with a no body', done => {
+          request.put(`${url}/api/school/${this.tempSchool._id}`)
+          .set('Content-Type', 'application/json')
+          .send('d')
+          .end((err, res) => {
+            console.log('ddddddddddd',res.body);
+            expect(res.status).to.equal(400);
+            done();
+          });
+        });
+      });
     });
 
     describe('Testing DELETE requests', function() {
@@ -132,6 +179,5 @@ describe('Testing API', function() {
         });
       });
     });
-
   });
 });
