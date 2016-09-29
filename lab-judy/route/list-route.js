@@ -20,6 +20,7 @@ listRouter.post('/api/list', jsonParser, function(req, res, next){
 listRouter.get('/api/list/:id', function(req, res, next){
   debug('running GET route');
   List.findById(req.params.id)
+  .populate('persons')
   .then(list => {
     res.json(list);
   })

@@ -12,6 +12,7 @@ const errorMiddleWare = require('./lib/error-middleware.js');
 
 // app modules
 const listRouter = require('./route/list-route.js');
+const personRouter = require('./route/person-route.js');
 
 // module constants
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,7 @@ app.use(morgan('dev'));
 
 // routes
 app.use(listRouter);
+app.use(personRouter);
 app.use(errorMiddleWare);
 
 const server = module.exports = app.listen(PORT, function(){

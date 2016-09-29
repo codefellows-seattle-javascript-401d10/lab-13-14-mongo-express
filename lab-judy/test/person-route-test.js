@@ -5,50 +5,31 @@ process.env.MONGODB_URI = 'mongodb://localhost/persontest';
 
 const expect = require('chai').expect;
 const request = require('superagent');
+
 const List = require('../model/list.js');
-const debug = require('debug')('person test:');
+const Person = require('../model/person.js');
+
 
 require('../server.js');
 
 const url = `http://localhost:${PORT}`;
 
-const exampleList = {
-  name: 'judy',
-  age: 11
+const examplePerson = {
+  lastName: 'vue',
+  location: 'seattle'
 };
 
-describe('testing route /api/list', function(){
+const exampleList = {
+  name: 'judy',
+  age: 11,
+  timestamp: new Date()
+};
 
-  //POST 200
-  describe('testing POST request 200', function(){
-    describe('with valid body', function(){
-      after( done => {
-        if(this.tempList){
-          List.remove({})
-          .then( () => done())
-          .catch(done);
-          return;
-        }
-        done();
-      });
-      it('should return a list with status 200', done => {
-        request.post(`${url}/api/list`)
-        .send(exampleList)
-        .end((err, res) => {
-          if (err) return done (err);
-          expect(res.status).to.equal(200);
-          expect(res.body.name).to.equal('judy');
-          this.tempList = res.body;
-          done();
-        });
-      });
-    });
-  });
-  //GET request 200
-  describe('testing GET request 200', function(){
-    describe('with valid id', function(){
-      before( done => {
-        exampleList.timestamp = new Date();
+describe('testing person routes', function(){
+
+  describe('testing POST requests', function(){
+    describe('with valid list id and person body', () => {
+      before(done => {
         new List(exampleList).save()
         .then( list => {
           this.tempList = list;
@@ -56,241 +37,143 @@ describe('testing route /api/list', function(){
         })
         .catch(done);
       });
-      after( done => {
-        delete exampleList.timestamp;
-        if(this.tempList){
-          List.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
-        done();
+
+      after(done => {
+        Promise.all([
+          List.remove({}),
+          Person.remove({})
+        ])
+        .then(() => done())
+        .catch(done);
       });
 
-      it ('should return a list with status 200', done => {
-        debug('running it block for GET request with 200 status');
-        request.get(`${url}/api/list/${this.tempList._id}`)
+      //POST 200 test
+      it('should return a person with status 200', done => {
+        request.post(`${url}/api/list/${this.tempList.id}/person`)
+        .send(examplePerson)
         .end((err, res) => {
           if (err) return done(err);
           expect(res.status).to.equal(200);
-          expect(res.body.name).to.equal('judy');
-          this.tempList = res.body;
-          done();
-        });
-      });
-    });
-  });
-
-  //PUT test 200
-  describe('testing PUT request 200', function(){
-    describe('with valid body', function(){
-      before( done => {
-        exampleList.timestamp = new Date();
-        new List(exampleList).save()
-        .then( list => {
-          this.tempList = list;
-          done();
-        })
-        .catch(done);
-      });
-      after( done => {
-        delete exampleList.timestamp;
-        if(this.tempList){
-          List.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
-        done();
-      });
-      it('should update the data with 200 status', done => {
-        debug('running it block for PUT request with 200 status');
-        var updatedData = {name: 'Jen', age: 12};
-        request.put(`${url}/api/list/${this.tempList._id}`)
-        .send(updatedData)
-        .end((err, res) => {
-          if (err) return done (err);
-          expect(res.status).to.equal(200);
-          expect(res.body._id).to.equal(this.tempList._id.toString());
-          for (var key in updatedData){
-            expect(res.body[key]).to.equal(updatedData[key]);
-          }
-          this.tempList = res.body;
-          done();
-        });
-      });
-    });
-  });
-
-  //DELETE request 204
-  describe('testing DELETE request', function(){
-    describe('with valid ID', function(){
-      before( done => {
-        exampleList.timestamp = new Date();
-        new List(exampleList).save()
-        .then( list => {
-          this.tempList = list;
-          done();
-        })
-        .catch(done);
-      });
-      after( done => {
-        delete exampleList.timestamp;
-        if(this.tempList){
-          List.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
-        done();
-      });
-      it('should delete item and return status 204', done => {
-        debug('running it block for DELETE request with 204 status');
-        request.delete(`${url}/api/list/${this.tempList._id}`)
-        .end( (err, res) => {
-          if (err) return done (err);
-          expect(res.status).to.equal(204);
-          for (var key in res.body){
-            expect(!res.body[key]);
-          }
-          this.tempList = res.body;
+          expect(res.body.lastName).to.equal(examplePerson.lastName);
+          expect(res.body.listID).to.equal(this.tempList._id.toString());
           done();
         });
       });
 
-    });
-  });
-  //GET test 404
-  describe('testing GET request for status 404', function(){
-    describe('invalid id', function(){
-      before( done => {
-        exampleList.timestamp = new Date();
-        new List(exampleList).save()
-        .then( list => {
-          this.tempList = list;
-          done();
-        })
-        .catch(done);
-      });
-      after( done => {
-        delete exampleList.timestamp;
-        if(this.tempList){
-          List.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
-        done();
-      });
-
-      it('should return status 404 for invalid request', done => {
-        request.get(`${url}/api/list/badid#`)
-        .end( (err, res) => {
-          expect(res.status).to.equal(404);
-          this.tempList = res.body;
-          done();
-        });
-      });
-    });
-  });
-
-  //PUT test 400 - no body provided
-  describe('testing PUT request for status 400', function(){
-    describe('with no body provided', function(){
-      before( done => {
-        exampleList.timestamp = new Date();
-        new List(exampleList).save()
-        .then( list => {
-          this.tempList = list;
-          done();
-        })
-        .catch(done);
-      });
-      after( done => {
-        delete exampleList.timestamp;
-        if(this.tempList){
-          List.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
-        done();
-      });
-
-      it('should return status 400 for no body provided', done => {
-        request.put(`${url}/api/list/${this.tempList._id}`)
-        .set('Content-Type','application/json')
-        .send('invalid body')
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          this.tempList = res.body;
-          done();
-        });
-      });
-    });
-  });
-
-  //PUT test 404 - valid request, but id not found
-  describe('testing PUT request for status 404', function(){
-    describe('valid request with ID not found', function(){
-      before( done => {
-        exampleList.timestamp = new Date();
-        new List(exampleList).save()
-        .then( list => {
-          this.tempList = list;
-          done();
-        })
-        .catch(done);
-      });
-      after( done => {
-        delete exampleList.timestamp;
-        if(this.tempList){
-          List.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
-        done();
-      });
-
-      it('should return status 404', done => {
-        var updatedData = {name: 'fake', age: 4};
-        request.put(`${url}/api/list/badid#`)
-      .send(updatedData)
-      .end((err, res) =>{
-        expect(res.status).to.equal(404);
-        done();
-      });
-      });
-    });
-  });
-
-  //POST test 400 bad request if no body provided
-  describe('testing POST for status 400', function(){
-    describe('with no body provided', function(){
-      it('should return status 400', done => {
-        request.post(`${url}/api/list`)
+      //POST 400 test
+      it('should return 400 for invalid body provided', done => {
+        request.post(`${url}/api/list/${this.tempList.id}/person`)
         .send()
         .end((err, res) => {
           expect(res.status).to.equal(400);
-          this.tempList = res.body;
+          done();
+        });
+      });
+    });
+
+
+  });
+
+  describe('testing GET requests', function(){
+    before(done => {
+      new List(exampleList).save()
+      .then( list => {
+        this.tempList = list;
+        return List.findByIdAndAddPerson(list._id, examplePerson);
+      })
+      .then( person => {
+        this.tempPerson = person;
+        done();
+      })
+      .catch(done);
+    });
+
+    after(done => {
+      Promise.all([
+        List.remove({}),
+        Person.remove({})
+      ])
+      .then(() => done())
+      .catch(done);
+    });
+
+    describe('valid request', () => {
+      it('should return status 200 and person body', done => {
+        request.get(`${url}/api/list/person/${this.tempPerson._id}`)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.lastName).to.equal(examplePerson.lastName);
+          expect(res.body.location).to.equal(examplePerson.location);
           done();
         });
       });
     });
   });
 
-  //DELETE test 404 for valid request with no id
-  describe('testing DELETE for status 404', function(){
-    describe('with no id provided', function(){
-      it('should return status 404', done =>{
-        request.delete(`${url}/api/list/badid#`)
-        .end( (err, res) => {
-          expect(res.status).to.equal(404);
-          this.tempList = res.body;
-          done();
-        });
+  describe('testing DELETE requests', function(){
+    before(done => {
+      new List(exampleList).save()
+      .then( list => {
+        this.tempList = list;
+        return List.findByIdAndAddPerson(list._id, examplePerson);
+      })
+      .then( person => {
+        this.tempPerson = person;
+        done();
+      })
+      .catch(done);
+    });
+
+    after(done => {
+      List.remove({})
+      .then(() => done())
+      .catch(done);
+    });
+    it('should delete person with valid ID', done => {
+      request.delete(`${url}/api/list/${this.tempList._id}/person/${this.tempPerson._id}`)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).to.equal(204);
+        done();
       });
     });
   });
+
+  // //PUT 200 test
+  // describe('testing PUT routes', function(){
+  //   before(done => {
+  //     new List(exampleList).save()
+  //     .then( list => {
+  //       this.tempList = list;
+  //       done();
+  //     })
+  //     .catch(done);
+  //   });
+  //
+  //   after(done => {
+  //     Promise.all([
+  //       List.remove({}),
+  //       Person.remove({})
+  //     ])
+  //     .then(() => done())
+  //     .catch(done);
+  //   });
+  //
+  //   it('should return 200 for valid body provided', done => {
+  //     var updatedPerson = {lastName: 'unrau', location: 'portland'};
+  //     request.put(`${url}/api/list/${this.tempList.id}/person`)
+  //   .send(updatedPerson)
+  //   .end((err, res) => {
+  //     if (err) return done(err);
+  //     expect(res.status).to.equal(200);
+  //     expect(res.body_id).to.equal(this.tempList._id.toString());
+  //     for (var key in updatedPerson){
+  //       expect(res.body[key]).to.equal(updatedPerson[key]);
+  //     }
+  //     done();
+  //   });
+  //   });
+  // });
+
 });
