@@ -14,6 +14,7 @@ const url = `http://localhost:${PORT}`;
 const exampleCafe = {
   name: 'Test Cafe',
   address: 'Test Address',
+  timestamp: new Date(),
 };
 
 const exampleCafeTwo = {
@@ -202,13 +203,14 @@ describe('Testing routes on /api/cafe', function(){
           expect(res.status).to.equal(200);
           expect(res.body.name).to.equal('New Test Name');
           expect(res.body.address).to.equal('New Test Address');
-          this.tempCafe = res.body;
+          let testTimestamp = new Date(res.body.timestamp);
+          expect(testTimestamp.toString()).to.equal(exampleCafe.timestamp.toString());
           done();
         });
       });
     });
 
-    describe('Testing PUT /api/cafe with VALID BODY', function(){
+    describe('Testing PUT /api/cafe with INVALID BODY', function(){
 
       before(done => {
         new Cafe(exampleCafe).save()

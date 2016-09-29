@@ -40,11 +40,12 @@ cafeRouter.delete('/api/cafe/:id', function(req, res, next){
 
 cafeRouter.put('/api/cafe/:id', jsonParser, function(req, res, next) {
   debug('Hit route PUT /api/cat');
-  debug('req.body', req.body);
-  let newBody = req.body;
-  Cafe.findByIdAndUpdate(req.params.id, newBody, {new: true})
+  Cafe.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then(cafe => res.json(cafe))
-  .catch(err => next(createError(404, err.message)));
+  .catch(err => {
+    if (err.name === 'ValidationError') return next(err);
+    next(createError(404, err.message));
+  });
 });
 
 
