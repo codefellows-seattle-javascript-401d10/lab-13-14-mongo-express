@@ -43,7 +43,6 @@ describe('testing route /api/store', function(){
       });
 
       after( done => {
-        delete exampleStore.timestamp;
         if(this.tempStore){
           Store.remove({})
           .then(() => done())
@@ -144,7 +143,6 @@ describe('testing route /api/store', function(){
       });
 
       after( done => {
-        delete exampleStore.timestamp;
         if(this.tempStore){
           Store.remove({})
           .then(() => done())
@@ -187,7 +185,6 @@ describe('testing route /api/store', function(){
       });
 
       after( done => {
-        delete exampleStore.timestamp;
         if(this.tempStore){
           Store.remove({})
           .then(() => done())

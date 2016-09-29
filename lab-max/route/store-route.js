@@ -28,10 +28,13 @@ storeRouter.put('/api/store/:id', jsonParser, function(req, res, next){
   debug('storeRouter PUT');
   Store.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then( store => res.json(store))
-  .catch(err => next(createError(404, err.message)));
+  .catch(err => {
+    if(err.name === 'ValidationError') return next(err);
+    next(createError(404, err.message));
+  });
 });
 
-storeRouter.delete('/api/store/:id', jsonParser, function(req, res, next){
+storeRouter.delete('/api/store/:id', function(req, res, next){
   debug('storeRouter DELETE');
   Store.findByIdAndRemove(req.params.id)
   .then(() => res.status(204).send())
