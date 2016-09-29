@@ -83,6 +83,7 @@ describe('testing route /api/park', function(){
       });
 
       it('should return a park', done => {
+        debug('hitting get route');
         request.get(`${url}/api/park/${this.tempPark._id}`)
         .end((err, res) => {
           if (err) return done(err);
