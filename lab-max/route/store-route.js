@@ -12,6 +12,7 @@ const storeRouter = module.exports = new Router();
 storeRouter.get('/api/store/:id', function(req, res, next){
   debug('storeRouter GET');
   Store.findById(req.params.id)
+  .populate('items')
   .then( store => res.json(store))
   .catch(err => next(createError(404, err.message)));
 });

@@ -8,6 +8,7 @@ const Promise = require('bluebird');
 const debug = require('debug')('store:server');
 
 const storeRouter = require('./route/store-route.js');
+const itemRouter = require('./route/item-route.js');
 const errorMiddleware = require('./lib/error-middleware.js');
 
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use(storeRouter);
+app.use(itemRouter);
 app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function(){
