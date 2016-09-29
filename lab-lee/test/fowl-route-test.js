@@ -119,7 +119,6 @@ describe('testing route /api/note', function() {
       });
 
       after( done => {
-        delete exampleFowl.timestamp;
         if(this.tempFowl) {
           Fowl.remove({})
           .then(() => done())
@@ -137,7 +136,8 @@ describe('testing route /api/note', function() {
           if (err) return done(err);
           expect(res.status).to.equal(200);
           expect(res.body.name).to.equal('steve');
-          this.tempFowl = res.body;
+          let timestamp = new Date(res.body.timestamp);
+          expect(timestamp.toString()).to.equal(exampleFowl.timestamp.toString());
           done();
         });
       });
