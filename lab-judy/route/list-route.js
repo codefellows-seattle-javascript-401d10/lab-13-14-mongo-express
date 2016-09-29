@@ -41,5 +41,8 @@ listRouter.put('/api/list/:id', jsonParser, function(req, res, next){
   debug('running put route');
   List.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then( (list) => res.json(list))
-  .catch(err => next(createError(404, err.message)));
+  .catch(err => {
+    if (err.name === 'ValidationError') return next(err);
+    next(createError(404, err.message));
+  });
 });

@@ -74,6 +74,7 @@ describe('testing route /api/list', function(){
           if (err) return done(err);
           expect(res.status).to.equal(200);
           expect(res.body.name).to.equal('judy');
+          this.tempList = res.body;
           done();
         });
       });
@@ -114,6 +115,7 @@ describe('testing route /api/list', function(){
           for (var key in updatedData){
             expect(res.body[key]).to.equal(updatedData[key]);
           }
+          this.tempList = res.body;
           done();
         });
       });
@@ -151,6 +153,7 @@ describe('testing route /api/list', function(){
           for (var key in res.body){
             expect(!res.body[key]);
           }
+          this.tempList = res.body;
           done();
         });
       });
@@ -184,6 +187,7 @@ describe('testing route /api/list', function(){
         request.get(`${url}/api/list/badid#`)
         .end( (err, res) => {
           expect(res.status).to.equal(404);
+          this.tempList = res.body;
           done();
         });
       });
@@ -219,6 +223,7 @@ describe('testing route /api/list', function(){
         .send('invalid body')
         .end((err, res) => {
           expect(res.status).to.equal(400);
+          this.tempList = res.body;
           done();
         });
       });
@@ -268,6 +273,7 @@ describe('testing route /api/list', function(){
         .send()
         .end((err, res) => {
           expect(res.status).to.equal(400);
+          this.tempList = res.body;
           done();
         });
       });
@@ -281,6 +287,7 @@ describe('testing route /api/list', function(){
         request.delete(`${url}/api/list/badid#`)
         .end( (err, res) => {
           expect(res.status).to.equal(404);
+          this.tempList = res.body;
           done();
         });
       });
