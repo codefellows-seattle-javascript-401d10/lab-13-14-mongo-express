@@ -3,7 +3,7 @@ This program is a simple REST API written with Express that keeps track of and r
 
 ##User Guide:
 It is important to structure your files as follows:
-* **lib** dir will contain your middleware and storage files
+* **lib** dir will contain your middleware 
 * **model** dir will contain your object constructor, which should be a simple resource
 * **test** dir will contain your program test files
 * **route** dir will contain your routes
@@ -15,7 +15,7 @@ npm install
 
 *See package.json for required dependencies and devdependencies*
 
-Be sure to include...
+Be sure to include in the scripts of your package.json...
 ```
 "start": "DEBUG='portfolio*' node server.js",
 "test": "DEBUG='portfolio*' ./node_modules/mocha/bin/mocha"
