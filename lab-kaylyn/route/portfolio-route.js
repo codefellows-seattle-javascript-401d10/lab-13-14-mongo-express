@@ -22,6 +22,7 @@ portfolioRouter.post('/api/portfolio', jsonParser, function(req, res, next){
 portfolioRouter.get('/api/portfolio/:id', function(req, res, next){
   debug('hit route GET /api/portfolio');
   Portfolio.findById(req.params.id)
+  .populate('projects')
   .then(portfolio => res.json(portfolio))
   .catch(err => next(createError(404, err.message)));
 });
@@ -39,6 +40,7 @@ portfolioRouter.put('/api/portfolio/:id', jsonParser, function(req, res, next){
 portfolioRouter.delete('/api/portfolio/:id', function(req, res, next){
   debug('hit route DELETE /api/portfolio');
   Portfolio.findByIdAndRemove(req.params.id)
+
   .then(() => res.status(204).send())
   .catch(err => next(createError(404, err.message)));
 });
