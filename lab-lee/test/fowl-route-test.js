@@ -6,6 +6,7 @@ process.env.MONGODB_URI = 'mongodb://localhost/fowltest';
 const expect = require('chai').expect;
 const request = require('superagent');
 const Fowl = require('../model/fowl.js');
+const debug = require('debug')('fowl:test');
 
 require('../server.js');
 
@@ -221,6 +222,46 @@ describe('testing route /api/note', function() {
           expect(res.status).to.equal(404);
           done();
         });
+      });
+    });
+  });
+
+  describe('Testing GET with api/fowl to return the db', function() {
+
+    before( done => {
+      exampleFowl.timestamp = new Date();
+      new Fowl(exampleFowl).save()
+      .then( fowl => {
+        this.tempFowl = fowl;
+      })
+      .then( fowl => {
+        new Fowl(exampleFowl).save();
+        this.tempFowl2 = fowl;
+        done();
+      })
+      .catch(done);
+    });
+
+    after( done => {
+      delete exampleFowl.timestamp;
+      if(this.tempFowl) {
+        Fowl.remove({})
+        .then(() => done())
+        .catch(done);
+        return;
+      }
+      done();
+    });
+
+    it('should return an array with status 200.', done => {
+      request.get(`${url}/api/fowl`)
+      .end((err, res) => {
+        debug('res body', res.body);
+        if (err) return done(err);
+        expect(res.status).to.equal(200);
+        expect(res.body.length).to.equal(2);
+        this.tempFowl = res.body;
+        done();
       });
     });
   });
