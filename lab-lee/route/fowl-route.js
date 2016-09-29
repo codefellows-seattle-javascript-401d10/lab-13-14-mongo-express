@@ -43,5 +43,8 @@ fowlRouter.put('/api/fowl/:id', jsonParser, function(req, res, next) {
   debug('hit route PUT /api/fowl/:id');
   Fowl.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then(fowl => res.json(fowl))
-  .catch(err => next(createError(404, err.message)));
+  .catch(err => {
+    if (err.name === 'ValidationError') return next(err);
+    next(createError(404, err.message));
+  });
 });
