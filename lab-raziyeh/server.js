@@ -10,6 +10,7 @@ const debug = require('debug')('customer:server');
 
 // app modules 
 const customerRouter = require('./route/customer-route.js');
+const orderRouter = require('./route/order-route.js');
 const errorMiddleware = require('./lib/error-middleware.js');
 
 // module constants
@@ -27,6 +28,7 @@ app.use(morgan('dev'));
 
 // routes
 app.use(customerRouter);
+app.use(orderRouter);
 //it's important that errorMiddleware be added after model router'
 app.use(errorMiddleware);
 
