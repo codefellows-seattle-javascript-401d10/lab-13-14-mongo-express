@@ -7,6 +7,7 @@ const createError = require('http-errors');
 const debug = require('debug')('debug:portfolioRouter');
 
 const Portfolio = require('../model/portfolio.js');
+const pageMiddleware = require('../lib/page-middleware.js');
 
 const portfolioRouter = module.exports = new Router();
 
@@ -30,7 +31,7 @@ portfolioRouter.put('/api/portfolio/:id', jsonParser, function(req, res, next){
   Portfolio.findByIdAndUpdate(req.params.id, req.body, {new:true})
   .then( portfolio => res.json(portfolio))
   .catch(err => {
-    if(err.name === 'ValidationError') return next(err); //mongoose always handles validation erros so it's already taken care of in the middleware error handlling logic 
+    if(err.name === 'ValidationError') return next(err); //mongoose always handles validation erros so it's already taken care of in the middleware error handlling logic
     next(createError(404, err.message));
   });
 });
@@ -40,4 +41,14 @@ portfolioRouter.delete('/api/portfolio/:id', function(req, res, next){
   Portfolio.findByIdAndRemove(req.params.id)
   .then(() => res.status(204).send())
   .catch(err => next(createError(404, err.message)));
+});
+
+portfolioRouter.get('/api/portfolio', pageMiddleware, function(req, res, next){
+  let offset = req.query.offset;
+  let pagesize = req.query.pagesize;
+  let page = req.query.page;
+  let skip = offset + pagesize * page;
+  Portfolio.find().skip(skip).limit(pagesize)
+  .then(portfolios => res.json(portfolios))
+  .catch(next);
 });
