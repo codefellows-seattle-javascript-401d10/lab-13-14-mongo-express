@@ -32,6 +32,13 @@ fowlRouter.get('/api/fowl', function(req, res, next) {
   .catch(err => next(createError(404, err.message)));
 });
 
+fowlRouter.get('/api/fowl/10', function(req, res, next) {
+  debug('hit route GETall');
+  Fowl.find().limit(10)
+  .then(fowl => res.json(fowl))
+  .catch(err => next(createError(404, err.message)));
+});
+
 fowlRouter.delete('/api/fowl/:id', function(req, res, next) {
   debug('hit route DELETE /api/fowl');
   Fowl.findByIdAndRemove(req.params.id)
