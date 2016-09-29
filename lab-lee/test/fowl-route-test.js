@@ -256,7 +256,6 @@ describe('testing route /api/note', function() {
     it('should return an array with status 200.', done => {
       request.get(`${url}/api/fowl`)
       .end((err, res) => {
-        debug('res body', res.body);
         if (err) return done(err);
         expect(res.status).to.equal(200);
         expect(res.body.length).to.equal(2);
