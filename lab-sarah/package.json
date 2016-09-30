@@ -1,0 +1,33 @@
+{
+  "name": "lab-sarah",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "debug": "^2.2.0",
+    "express": "^4.14.0",
+    "http-errors": "^1.5.0",
+    "mongoose": "^4.6.1",
+    "morgan": "^1.7.0",
+    "node-uuid": "^1.4.7"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "superagent": "^2.3.0",
+    "eslint": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-mocha": "^3.0.1",
+    "mocha-eslint": "^3.0.1"
+  },
+  "scripts": {
+    "start": "DEBUG='park*' node server.js",
+    "test": "DEBUG='park*' ./node_modules/mocha/bin/mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}
