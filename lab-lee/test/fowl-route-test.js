@@ -254,7 +254,7 @@ describe('testing route /api/note', function() {
         done();
       });
 
-      it('should return 50 fowls.', done => {
+      it('should return 50 fowls at page 0.', done => {
         request.get(`${url}/api/fowl`)
         .end((err, res) => {
           if (err) return done(err);
@@ -264,7 +264,7 @@ describe('testing route /api/note', function() {
         });
       });
 
-      it('should return 50 fowls.', done => {
+      it('should return 50 fowls at page 3.', done => {
         request.get(`${url}/api/fowl?page=3`)
         .end((err, res) => {
           if (err) return done(err);
