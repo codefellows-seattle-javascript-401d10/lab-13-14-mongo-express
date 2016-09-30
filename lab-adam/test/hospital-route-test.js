@@ -148,8 +148,8 @@ describe('testing hospital routes', function(){
         .send(updatedHospital)
         .end((err, res) => {
           if(err) return done(err);
-          for (var item in updatedHospital) {
-            expect(res.body.item).to.equal(updatedHospital.item);
+          for (var i  in updatedHospital) {
+            expect(res.body[i]).to.equal(updatedHospital[i]);
           }
           expect(res.body.cityID).to.equal(this.tempCity._id.toString());
           expect(res.status).to.equal(200);
