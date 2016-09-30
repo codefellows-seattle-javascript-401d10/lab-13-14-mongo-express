@@ -8,11 +8,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const debug = require('debug')('fruit:server');
 
+//app modules
+const fruitRouter = require('./route/fruit-route.js');
+const locationRouter = require('./route/location-route.js');
 const errorMiddleware = require('./lib/error-middleware.js');
-const fruitlistRouter = require('./route/fruit-route.js');
-
-//factory - function that creates an instance for you
-//like a constructor but it adds the new keyword for you - express is a factory in this case
 
 //module constants
 const PORT = process.env.port || 3000;
@@ -28,7 +27,8 @@ app.use(cors()); //can pass in arguments but now says anybody can use this api
 //need cors to have ppl use this from a browser
 
 //routes
-app.use(fruitlistRouter);
+app.use(fruitRouter);
+app.use(locationRouter);
 app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function() {
