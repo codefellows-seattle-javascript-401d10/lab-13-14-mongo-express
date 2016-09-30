@@ -4,8 +4,8 @@
   "description": "lab-13-14-mongo-express",
   "main": "server.js",
   "scripts": {
-    "test": "DEBUG='library*' ./node_modules/mocha/bin/mocha",
-    "start": "DEBUG='library*' node server.js"
+    "test": "DEBUG='series*' ./node_modules/mocha/bin/mocha",
+    "start": "DEBUG='series*' node server.js"
   },
   "repository": {
     "type": "git",

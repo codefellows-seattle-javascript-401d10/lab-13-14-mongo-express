@@ -18,19 +18,21 @@ const Series = module.exports = mongoose.model('series', seriesSchema);
 
 Series.findByIdAndAddBook = function(id, book){
   debug('findByIdAndAddBook');
-  Series.findById(id)
+  return Series.findById(id)
   .catch(err => Promise.reject(createError(400, err.message)))
   .then(series => {
+    debug('series', series);
     book.seriesID = series._id;
     this.tempSeries = series;
     return new Book(book).save();
   })
   .then(book => {
+    debug('book', book);
     this.tempSeries.books.push(book._id);
     this.tempBook = book;
     return this.tempSeries.save();
   })
   .then(() => {
-    return this.tempBook;
+    return Promise.resolve(this.tempBook);
   });
 };

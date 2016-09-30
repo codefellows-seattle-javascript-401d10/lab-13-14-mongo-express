@@ -16,7 +16,7 @@ const exampleBook = {
   published: '2005',
   author: 'R.F.Rankin',
   title: 'The Brightonomicon',
-  description: 'Hugo Rune vs. Count Otto Black. Rizla can\'t remember any of it',
+  description: 'Hugo Rune vs. Count Otto Black. Rizla cannot remember any of it',
 };
 
 const exampleSeries = {
@@ -26,6 +26,28 @@ const exampleSeries = {
 };
 
 describe('testing book routes', function(){
+
+  describe('testing GET requests', function(){
+
+    before(done => {
+      new Series(exampleSeries).save()
+      .then(series => {
+        this.tempSeries = series;
+        done();
+      })
+      .catch(done);
+    });
+
+    after(done => {
+      Promise.all([
+        Series.remove({}),
+        Book.remove({}),
+      ])
+      .then(() => done())
+      .catch(done);
+    });
+
+  });
 
   describe('testing POST requests', function(){
 
@@ -54,7 +76,7 @@ describe('testing book routes', function(){
         .send(exampleBook)
         .end((err, res) => {
           if(err) return done(err);
-          expect(status).to.equal(200);
+          expect(res.status).to.equal(200);
           expect(res.body.seriesID).to.equal(this.tempSeries._id.toString());
           // for(var key in res.body){
           //   if(key !== res.body.seriesID) expect(res.body[key]).to.equal(this.tempSeries[key]);
@@ -62,6 +84,38 @@ describe('testing book routes', function(){
           done();
         });
       });
+    });
+
+    describe('with invalid id but valid body', () => {
+
+      before(done => {
+        new Series(exampleSeries).save()
+        .then(series => {
+          this.tempSeries = series;
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Series.remove({}),
+          Book.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('should return 404: not found', done => {
+        request.post(`${url}/api/series/hippocampus/book`)
+        .send(exampleBook)
+        .end((err, res) => {
+          if(err) return done(err);
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
     });
 
   });
