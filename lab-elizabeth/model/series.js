@@ -16,10 +16,24 @@ const seriesSchema = Schema({
 
 const Series = module.exports = mongoose.model('series', seriesSchema);
 
-Series.findByIdAndAddBook = function(id, book){
+Series.findBookById = function(seriesID, bookID){
+  debug('findBookById');
+  return Series.findById(seriesID)
+  .catch(err => Promise.reject(createError(404, err.message)))
+  .then(series => {
+    debug('series', series);
+    return series.books.findById[bookID];
+  })
+  .then(book => {
+    debug('book', book);
+    return book;
+  });
+};
+
+Series.findByIdAndAddBook = function(seriesID, book){
   debug('findByIdAndAddBook');
-  return Series.findById(id)
-  .catch(err => Promise.reject(createError(400, err.message)))
+  return Series.findById(seriesID)
+  .catch(err => Promise.reject(createError(404, err.message)))
   .then(series => {
     debug('series', series);
     book.seriesID = series._id;
