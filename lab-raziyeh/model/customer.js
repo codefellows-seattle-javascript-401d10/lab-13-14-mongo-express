@@ -17,7 +17,6 @@ const customerSchema = Schema ({
 
 const Customer = module.exports = mongoose.model('customer', customerSchema);
 
-
 Customer.findByIdAndAddOrder = function(id, order) {
   return Customer.findById(id)
   .catch(err => Promise.reject(createError(404, err.message)))
@@ -39,7 +38,9 @@ Customer.findByIdAndAddOrder = function(id, order) {
 Customer.findByIdAndRemoveOrder = function(orderID) {
   Customer.find({orders: {_id: orderID}})
   .then(customer => {
-    customer[0].orders.remove(orderID);
+    customer.forEach( item => {
+      item.orders.remove(orderID);
+    });
     return customer[0].save();
   });
 };
