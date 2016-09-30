@@ -8,8 +8,7 @@ const debug = require('debug')('store:item-test');
 const request = require('superagent');
 const Store = require('../model/store.js');
 const Item = require('../model/item.js');
-
-require('../server.js');
+const server = require('../server.js');
 
 const url = `http://localhost:${PORT}`;
 
@@ -27,6 +26,32 @@ const exampleStore = {
 };
 
 describe('testing item routes', function(){
+
+  before((done) => {
+    debug('before module item-router-test');
+    if (! server.isRunning) {
+      server.listen(PORT, () => {
+        server.isRunning = true;
+        debug(`server up ::: ${PORT}`);
+        done();
+      });
+      return;
+    }
+    done();
+  });
+
+  after((done) => {
+    debug('after module item-router-test');
+    if (server.isRunning) {
+      server.close(() => {
+        server.isRunning = false;
+        debug('server down');
+        done();
+      });
+      return;
+    }
+    done();
+  });
 
   describe('testing POST requests', function(){
     describe('with valid store id and item', () => {

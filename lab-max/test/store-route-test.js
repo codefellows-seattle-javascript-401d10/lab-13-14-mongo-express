@@ -5,9 +5,9 @@ process.env.MONGODB_URI = 'mongodb://localhost/storetest';
 
 const expect = require('chai').expect;
 const request = require('superagent');
+const debug = require('debug')('store:store-test');
 const Store = require('../model/store.js');
-
-require('../server.js');
+const server = require('../server.js');
 
 const url = `http://localhost:${PORT}`;
 const exampleStore = {
@@ -23,6 +23,32 @@ const exampleItem = {
 };
 
 describe('testing route /api/store', function(){
+
+  before((done) => {
+    debug('before module store-router-test');
+    if (! server.isRunning) {
+      server.listen(PORT, () => {
+        server.isRunning = true;
+        debug(`server up ::: ${PORT}`);
+        done();
+      });
+      return;
+    }
+    done();
+  });
+
+  after((done) => {
+    debug('after module store-router-test');
+    if (server.isRunning) {
+      server.close(() => {
+        server.isRunning = false;
+        debug('server down');
+        done();
+      });
+      return;
+    }
+    done();
+  });
 
   describe('testing invalid route', function(){
     it('should respond with a 404 error for route not found', done => {
