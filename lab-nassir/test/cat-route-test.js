@@ -289,4 +289,165 @@ describe('Testing cat routes', function(){
       });
     });
   });
+
+  describe('Testing PUT routes', function() {
+    describe('Testing PUT with VALID ID and VALID BODY', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a 200 status and an updated cat', done => {
+        request.put(`${url}/api/cafe/${this.tempCafe._id}/cat/${this.tempCat._id}`)
+        .set('Content-type', 'application/json')
+        .send({name: 'Updatey', breed: 'Updatehair'})
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.name).to.equal('Updatey');
+          done();
+        });
+      });
+    });
+
+    describe('Testing PUT with INVALID CAT ID, VALID CAFE ID and VALID BODY', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a 404 status and NotFoundError', done => {
+        request.put(`${url}/api/cafe/${this.tempCafe._id}/cat/1234`)
+        .set('Content-type', 'application/json')
+        .send({name: 'Updatey', breed: 'Updatehair'})
+        .end((err, res) => {
+          // console.log(err);
+          expect(res.status).to.equal(404);
+          expect(res.text).to.equal('NotFoundError');
+          done();
+        });
+      });
+    });
+
+    describe('Testing PUT with INVALID CAFE ID, VALID CAT ID, and VALID BODY', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a 404 status and NotFoundError', done => {
+        request.put(`${url}/api/cafe/1234/cat/${this.tempCat._id}`)
+        .set('Content-type', 'application/json')
+        .send({name: 'Updatey', breed: 'Updatehair'})
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.text).to.equal('NotFoundError');
+          done();
+        });
+      });
+    });
+
+    describe('Testing PUT with VALID CAT ID, VALID CAFE ID and INVALID BODY', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a 400 status and SyntaxError', done => {
+        request.put(`${url}/api/cafe/${this.tempCafe._id}/cat/${this.tempCat._id}`)
+        .set('Content-type', 'application/json')
+        .send('mugwump')
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.text).to.equal('SyntaxError');
+          done();
+        });
+      });
+    });
+
+  });
 });

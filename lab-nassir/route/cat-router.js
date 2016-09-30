@@ -39,3 +39,20 @@ catRouter.delete('/api/cafe/:cafeId/cat/:catId', function(req, res, next){
   .then(() => res.sendStatus(204))
   .catch(err => next(createError(404, err.message)));
 });
+
+catRouter.put('/api/cafe/:cafeId/cat/:catId', jsonParser, function(req, res, next) {
+  debug('Hit PUT route');
+  Cafe.findById(req.params.cafeId)
+  .then(cafe => {
+    if (cafe.cats.indexOf(req.params.catId) === -1) {
+      debug('Cafe and cat IDs do not match!');
+      Promise.reject();
+    }
+    return Cat.findByIdAndUpdate(req.params.catId, req.body, {new: true});
+  })
+  .then(cat => {
+    console.log('cat', cat);
+    res.json(cat);
+  })
+  .catch(err => next(createError(404, err.message)));
+});
