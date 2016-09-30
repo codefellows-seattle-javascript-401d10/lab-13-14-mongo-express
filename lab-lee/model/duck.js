@@ -3,11 +3,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const noteSchema = Schema({
+const duckSchema = Schema({
   name: {type: String, required: true},
   color: {type: String, required: true},
   feathers: {type: String, required: true},
-  listID: {type: Schema.Types.ObjectId, required: true},
+  fowlID: {type: Schema.Types.ObjectId, required: true},
 });
 
-mongoose.exports = mongoose.model('note', noteSchema);
+module.exports = mongoose.model('duck', duckSchema);

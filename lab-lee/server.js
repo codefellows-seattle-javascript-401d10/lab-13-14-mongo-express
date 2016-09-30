@@ -10,6 +10,7 @@ const debug = require('debug')('fowl:server');
 
 // app modules
 const fowlRouter = require('./route/fowl-route');
+const duckRouter = require('./route/duck-route');
 const errorMiddleware = require('./lib/error-middleware.js');
 
 // module constants
@@ -27,6 +28,7 @@ app.use(morgan('dev'));
 
 // routes
 app.use(fowlRouter);
+app.use(duckRouter);
 app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function() {
