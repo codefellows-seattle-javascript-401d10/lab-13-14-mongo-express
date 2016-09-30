@@ -131,22 +131,13 @@ describe('Testing  API', function() {
             if(err) done(err);
             expect(res.status).to.equal(200);
             expect(res.body.price).to.equal(14000);
+            expect(err).to.be.null;
             done();
           });
         });
-      });
 
-      describe('PUT - test 400, responds with \'bad request\' for if no body provided or invalid body', () => {
-        before(done => {
-          new Order(exampleOrder).save()
-            .then(order => {
-              this.tempOrder = order;
-              done();
-            })
-            .catch(done);
-        });
-        it('Testing a PUT request made with a no body', done => {
-          request.put(`${url}/api/order/${this.tempOrder._id}`)
+        it('Testing a PUT request made with a no body - 400 Errors', done => {
+          request.put(`${url}/api/order/${tempOrder._id}`)
           .set('Content-Type', 'application/json')
           .send('d')
           .end((err, res) => {
@@ -154,10 +145,9 @@ describe('Testing  API', function() {
             done();
           });
         });
+
       });
     });
-
-
 
     describe('Testing DELETE requests', function() {
       describe('GET - test 204, Delete an Order with a valid order_id', function() {
@@ -172,6 +162,15 @@ describe('Testing  API', function() {
               done();
             })
             .catch(done);
+        });
+        
+        after(done => {
+          Promise.all([
+            Customer.remove({}),
+            Order.remove({}),
+          ])
+          .then(() => done())
+          .catch(done);
         });
 
         it('Expect to return 204 for a valid order_Id', done => {
