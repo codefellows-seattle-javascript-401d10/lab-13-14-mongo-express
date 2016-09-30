@@ -32,7 +32,6 @@ Customer.findByIdAndAddOrder = function(id, order){
     return this.tempCustomer.save();
   })
   .then( () => {
-    console.log('uasidaiusdas asdasdasd', this.tempOrder);
     return this.tempOrder;
   });
 };

@@ -40,17 +40,16 @@ describe('Testing  API', function() {
   });
 
   describe('Testing api/order', function() {
+    
     describe('Testing GET requests', function() {
       describe('GET - test 200, response body like {<data>} for a request made with a valid order_id', function() {
         before(done => {
           new Customer(exampleCustomer).save()
             .then(customer => {
-              console.log('customer ---------------->', customer);
               this.tempCustomer = customer;
               return Customer.findByIdAndAddOrder(customer._id, exampleOrder);
             })
             .then(order => {
-              console.log('Order ------------------>', order);
               this.tempOrder = order;
               done();
             })
@@ -62,6 +61,52 @@ describe('Testing  API', function() {
           .end((err, res) => {
             if(err) done(err);
             expect(res.status).to.equal(200);
+            expect(err).to.be.null;
+            done();
+          });
+        });
+      });
+    });
+
+    describe('Testing POST requests', function() {
+      describe('POST - test 200, create a new Order', function() {
+        before(done => {
+          new Customer(exampleCustomer).save()
+            .then(customer => {
+              this.tempCustomer = customer;
+              done();
+            })
+            .catch(done);
+        });
+
+        it('Expect to create a new Order', done => {
+          request.post(`${url}/api/customer/${this.tempCustomer._id}/order`)
+          .send(exampleOrder)
+          .end((err, res) => {
+            if(err) done(err);
+            expect(res.body.price).to.equal(12000);
+            expect(err).to.be.null;
+            done();
+          });
+        });
+      });
+      describe('POST - test 400, invalid body to create an new order', function() {
+        before(done => {
+          new Customer(exampleCustomer).save()
+            .then(customer => {
+              this.tempCustomer = customer;
+              done();
+            })
+            .catch(done);
+        });
+
+        it('Expect to show an 400 error', done => {
+          request.post(`${url}/api/customer/${this.tempCustomer._id}/order`)
+          //.set('Content-Type','application/json')
+          .send('ddd')
+          .end((err, res) => {
+            expect(res.status).to.equal(400);
+            expect(err).to.be.not.null;
             done();
           });
         });

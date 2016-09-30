@@ -29,6 +29,7 @@ app.use(morgan('dev'));
 // routes
 app.use(customerRouter);
 app.use(orderRouter);
+
 //it's important that errorMiddleware be added after model router'
 app.use(errorMiddleware);
 
