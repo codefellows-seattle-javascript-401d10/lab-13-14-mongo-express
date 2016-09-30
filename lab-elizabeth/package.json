@@ -4,8 +4,8 @@
   "description": "lab-13-14-mongo-express",
   "main": "server.js",
   "scripts": {
-    "test": "DEBUG='library*' ./node_modules/mocha/bin/mocha",
-    "start": "DEBUG='library*' node server.js"
+    "test": "DEBUG='series*' ./node_modules/mocha/bin/mocha",
+    "start": "DEBUG='series*' node server.js"
   },
   "repository": {
     "type": "git",
@@ -20,10 +20,12 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
     "debug": "^2.2.0",
     "express": "^4.14.0",
     "http-errors": "^1.5.0",
     "mkdirp": "^0.5.1",
+    "mongoose": "^4.6.1",
     "morgan": "^1.7.0",
     "node-uuid": "^1.4.7",
     "uuid": "^2.0.3"
