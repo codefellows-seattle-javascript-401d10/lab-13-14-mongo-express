@@ -33,6 +33,17 @@ catRouter.get('/api/cafe/:cafeId/cat/:catId', function(req, res, next){
   .catch(err => next(createError(404, err.message)));
 });
 
+catRouter.get('/api/cafe/:cafeId/cat/', function(req, res, next){
+  debug('Hit GET router WITH NO CAT ID');
+  Cafe.findById(req.params.cafeId)
+  .then(cafe => {
+    console.log('DHBHDBGHDBGHD', cafe.cats);
+    res.json(cafe.cats);
+  })
+  .catch(err => next(createError(404, err.message)));
+});
+
+
 catRouter.delete('/api/cafe/:cafeId/cat/:catId', function(req, res, next){
   debug('Hit DELETE route');
   Cafe.findByIdAndRemoveCat(req.params.cafeId, req.params.catId)

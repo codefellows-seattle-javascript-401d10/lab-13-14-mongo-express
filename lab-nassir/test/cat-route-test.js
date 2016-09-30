@@ -168,6 +168,45 @@ describe('Testing cat routes', function(){
       });
     });
 
+    describe('Testing GET with NO VALID ID', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a status of 200 and an array of cats', done => {
+        request.get(`${url}/api/cafe/${this.tempCat.cafeId}/cat/`)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body[0]).to.equal(this.tempCat._id.toString());
+          done();
+        });
+      });
+    });
+
+
     describe('Testing GET with INVALID CAT ID', () => {
 
       before(done => {
@@ -288,6 +327,120 @@ describe('Testing cat routes', function(){
         });
       });
     });
+
+    describe('Testing DELETE with VALID CAFE ID and INVALID CAT ID', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a status of 404 and a NotFoundError', done => {
+        request.delete(`${url}/api/cafe/${this.tempCat.cafeId}/cat/1234`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.text).to.equal('NotFoundError');
+          done();
+        });
+      });
+    });
+
+
+    describe('Testing DELETE with INVALID CAFE ID and VALID CAT ID', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a status of 404 and a NotFoundError', done => {
+        request.delete(`${url}/api/cafe/1234/cat/${this.tempCat._id}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.text).to.equal('NotFoundError');
+          done();
+        });
+      });
+    });
+
+    describe('Testing DELETE with VALID CAFE ID and NO CAT ID', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a status of 404 and a "Cannot Delete" error msg', done => {
+        request.delete(`${url}/api/cafe/${this.tempCafe._id}/cat/`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.text).to.equal(`Cannot DELETE /api/cafe/${this.tempCafe._id}/cat/\n`);
+          done();
+        });
+      });
+    });
+
+
   });
 
   describe('Testing PUT routes', function() {
