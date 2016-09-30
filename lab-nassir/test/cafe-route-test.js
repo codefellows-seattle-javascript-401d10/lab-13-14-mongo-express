@@ -304,6 +304,7 @@ describe('Testing routes on /api/cafe', function(){
       });
 
     });
+
     describe('Testing DELETE /api/cafe/ with INVALID ID', function(){
 
       before(done => {
@@ -333,8 +334,39 @@ describe('Testing routes on /api/cafe', function(){
           done();
         });
       });
-
     });
+
+    describe('Testing DELETE /api/cafe/ with NO ID', function(){
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          this.tempCafe = cafe;
+          done();
+        })
+        .catch(done);
+        return;
+      });
+
+      after(done => {
+        if(this.tempCafe) {
+          Cafe.remove({})
+          .then(() => done())
+          .catch(done);
+          return;
+        }
+        done();
+      });
+
+      it('Should return a status code of 404', done => {
+        request.delete(`${url}/api/cafe/`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
 
   });
 
