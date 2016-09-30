@@ -35,3 +35,24 @@ Portfolio.findByIdAndAddProject = function(id, project){
     return this.tempProject;
   });
 };
+
+Portfolio.findByIdAndRemoveProject = function(projectId){
+  return Project.findById(projectId)
+  .then( project => {
+    this.tempProject = project;
+    return Project.remove(this.tempProject);
+  })
+  .then (() => {
+    return Portfolio.findById(this.tempProject.portfolioID);
+  })
+  .catch(err => Promise.reject(createError(404, err.message)))
+  .then( portfolio => {
+    debug('PORTFOLIO', portfolio);
+    for(var i = 0; i < portfolio.projects.length; i++){
+      if(portfolio.projects[i]._id === this.tempProject.portfolioID){
+        return portfolio.projects.splice(i, 1);
+      }
+    }
+    portfolio.save();
+  });
+};

@@ -72,33 +72,76 @@ describe('testing project routes', function(){
     });
   });
 
-  // describe('testing GET requests', function(){
-  //   describe('testing with valid body', function(){
-  //     before( done => {
-  //       examplePortfolio.timestamp = new Date();
-  //       new Portfolio(examplePortfolio).save()
-  //       .then( portfolio => {
-  //         this.tempPortfolio = portfolio;
-  //         return Portfolio.findByIdAndAddProject(portfolio._id, exampleProject);
-  //       })
-  //       .then( project => {
-  //         this.tempProject = project;
-  //         done();
-  //       })
-  //       .catch(done);
-  //     });
-  //     after( done => {
-  //       Promise.all([
-  //         Portfolio.remove({})
-  //         Project.remove({})
-  //       ])
-  //       .then(() => done())
-  //       .catch(done);
-  //     });
-  //     it('should return a project', done => {
-  //
-  //     });
-  //   });
-  // });
+  describe('testing GET requests', function(){
+    describe('testing with valid body', function(){
+      before( done => {
+        examplePortfolio.timestamp = new Date();
+        new Portfolio(examplePortfolio).save()
+        .then( portfolio => {
+          this.tempPortfolio = portfolio;
+          return Portfolio.findByIdAndAddProject(portfolio._id, exampleProject);
+        })
+        .then( project => {
+          this.tempProject = project;
+          done();
+        })
+        .catch(done);
+      });
+      after( done => {
+        Promise.all([
+          Portfolio.remove({}),
+          Project.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+      it('should return a project', done => {
+        request.get(`${url}/api/project/${this.tempProject._id}`)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.projectName).to.equal(exampleProject.projectName);
+          expect(res.body.aboutProject).to.equal(exampleProject.aboutProject);
+          expect(res.body.projectLink).to.equal(exampleProject.projectLink);
+          expect(res.body.portfolioID).to.equal(this.tempPortfolio._id.toString());
+          done();
+        });
+      });
+    });
+  });
+
+  describe('testing DELETE requests', function(){
+    describe('testing DELETE with valid id', function(){
+      before( done => {
+        examplePortfolio.timestamp = new Date();
+        new Portfolio(examplePortfolio).save()
+        .then( portfolio => {
+          this.tempPortfolio = portfolio;
+          return Portfolio.findByIdAndAddProject(portfolio._id, exampleProject);
+        })
+        .then(project => {
+          this.tempProject = project;
+          done();
+        })
+        .catch(done);
+      });
+      it('should return a status code of 204', done => {
+        request.delete(`${url}/api/project/${this.tempProject._id}`)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(204);
+          done();
+        });
+      });
+      it('should return a status code of 404 if no id or invalid id', done => {
+        request.delete(`${url}/api/project/slughands`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
 
 });
