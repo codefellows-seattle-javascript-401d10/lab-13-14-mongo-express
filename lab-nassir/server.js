@@ -8,7 +8,9 @@ const mongoose = require('mongoose');
 const debug = require('debug')('cat:server');
 
 const errorMiddleware = require('./lib/error-middleware');
+const pageMiddleware = require('./lib/page-middleware');
 const cafeRouter = require('./route/cafe-router');
+const catRouter = require('./route/cat-router');
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/catdev';
 
@@ -20,6 +22,8 @@ app.use(morgan('dev'));
 app.use(cors());
 
 app.use(cafeRouter);
+app.use(catRouter);
+app.use(pageMiddleware);
 app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function(){
