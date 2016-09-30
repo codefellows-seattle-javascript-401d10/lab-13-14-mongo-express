@@ -6,11 +6,13 @@ const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
-const debug = require('debug')('dog:server');
-const errorMiddleware = require('./lib/error-middleware');
+const debug = require('debug')('park:server');
 
 //app modules
+//HAVE TO REQUIRE IN ALL ROUTERS TO SERVER
 const parkRouter = require('./route/park-route.js');
+const dogRouter = require('./route/dog-route.js');
+const errorMiddleware = require('./lib/error-middleware');
 
 //module constants
 const PORT = process.env.PORT || 3000;
@@ -27,6 +29,7 @@ app.use(morgan('dev'));
 
 //routes
 app.use(parkRouter);
+app.use(dogRouter);
 app.use(errorMiddleware);
 
 const server = module.exports = app.listen(PORT, function(){
