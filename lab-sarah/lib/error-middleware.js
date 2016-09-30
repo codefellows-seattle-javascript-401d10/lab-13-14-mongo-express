@@ -1,7 +1,7 @@
 'use strict';
 
 const createError = require('http-errors');
-const debug = require('debug')('city:server');
+const debug = require('debug')('park:server');
 
 module.exports = function(err, req, res, next){
   debug('error middleware');
