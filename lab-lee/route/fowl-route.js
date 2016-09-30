@@ -22,6 +22,7 @@ fowlRouter.post('/api/fowl', jsonParser, function(req, res, next) {
 fowlRouter.get('/api/fowl/:id', function(req, res, next) {
   debug('hit route GET');
   Fowl.findById(req.params.id)
+  .populate('ducks')
   .then(fowl => res.json(fowl))
   .catch(err => next(createError(404, err.message)));
 });

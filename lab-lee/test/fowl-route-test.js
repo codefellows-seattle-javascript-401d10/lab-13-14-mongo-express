@@ -6,10 +6,18 @@ process.env.MONGODB_URI = 'mongodb://localhost/fowltest';
 const expect = require('chai').expect;
 const request = require('superagent');
 const Fowl = require('../model/fowl.js');
+const Duck = require('../model/duck.js');
 
 const exampleFowl = {
   name: 'Jeff',
 };
+
+const exampleDuck = {
+  name: 'Jeff',
+  color: 'blue',
+  feathers: '15',
+};
+
 const url = `http://localhost:${PORT}`;
 
 require('../server.js');
@@ -64,6 +72,10 @@ describe('testing route /api/fowl', function() {
         new Fowl(exampleFowl).save()
         .then( fowl => {
           this.tempFowl = fowl;
+          return Fowl.findByIdAndAddDuck(fowl._id, exampleDuck);
+        })
+        .then( duck => {
+          this.tempDuck = duck;
           done();
         })
         .catch(done);
@@ -84,9 +96,11 @@ describe('testing route /api/fowl', function() {
         request.get(`${url}/api/fowl/${this.tempFowl._id}`)
         .end((err, res) => {
           if (err) return done(err);
+          console.log(res.body);
           expect(res.status).to.equal(200);
           expect(res.body.name).to.equal('Jeff');
-          this.tempFowl = res.body;
+          expect(res.body.ducks.length).to.equal(1);
+          expect(res.body.ducks[0].name).to.equal(exampleDuck.name);
           done();
         });
       });

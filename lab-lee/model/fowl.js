@@ -9,7 +9,7 @@ const Duck = require('./duck.js');
 const fowlSchema = Schema({
   name: {type: String, required: true},
   timestamp: {type: Date, required: true},
-  ducks: [{type: Schema.Types.ObjectId, refs: 'duck'}],
+  ducks: [{type: Schema.Types.ObjectId, ref: 'duck'}],
 });
 
 const Fowl = module.exports = mongoose.model('fowl', fowlSchema);
