@@ -12,7 +12,7 @@ This API allows clients to perform CRUD operations on two types of objects: Citi
 - DELETE: takes an ID and deletes the object corresponding to the ID.
 
 <h3>Properties</h3>
-<em>All of these properties are required in order to create a city.
+<em>All of these properties are required in order to create a city.</em>
 - "name", String
 - "population", Integer
 - "lat", Number
