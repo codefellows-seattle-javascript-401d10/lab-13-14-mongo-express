@@ -19,8 +19,7 @@ const Series = module.exports = mongoose.model('series', seriesSchema);
 Series.findBookById = function(seriesID, bookID){
   debug('findBookById');
   return Series.findById(seriesID)
-  .then(series => {
-    debug('series', series);
+  .then(() => {
     return Book.findById(bookID);
   })
   .catch(err => Promise.reject(createError(404, err.message)));
@@ -31,13 +30,11 @@ Series.findByIdAndAddBook = function(seriesID, book){
   return Series.findById(seriesID)
   .catch(err => Promise.reject(createError(404, err.message)))
   .then(series => {
-    debug('series', series);
     book.seriesID = series._id;
     this.tempSeries = series;
     return new Book(book).save();
   })
   .then(book => {
-    debug('book', book);
     this.tempSeries.books.push(book._id);
     this.tempBook = book;
     return this.tempSeries.save();
@@ -50,9 +47,17 @@ Series.findByIdAndAddBook = function(seriesID, book){
 Series.findbyIdAndDeleteBook = function(seriesID, bookID){
   debug('findbyIdAndDeleteBook');
   return Series.findById(seriesID)
-  .catch(err => Promise.reject(createError(404, err.message)))
-  .then(series => {
-    debug('series', series);
-    Book.findByIdandRemove(bookID);
-  });
+  .then(() => {
+    return Book.findByIdandRemove(bookID);
+  })
+  .catch(err => Promise.reject(createError(404, err.message)));
+};
+
+Series.findbyIdAndUpdateBook = function(seriesID, bookID, book){
+  debug('findbyIdAndUpdateBook');
+  return Series.findById(seriesID)
+  .then(() => {
+    return Book.findbyIdandUpdate(bookID, book, {new: true});
+  })
+  .catch(err => Promise.reject(createError(404, err.message)));
 };
