@@ -1,9 +1,10 @@
-# Single Resource API w/ MongoDB & Express
+# Double Resource API w/ MongoDB & Express
 
-This is a single resource API, built using MongoDB for our persistence layer and Express as the framework, which is compatible with CRUD operations. For this API, you can GET, POST, PUT, and DELETE a 'store'.
+This is a double resource API, built using MongoDB for our persistence layer and Express as the framework, which is compatible with CRUD operations. For this API, you can GET, POST, PUT, and DELETE a 'store' or 'item'.
 
 - Each store object must have: name, year, storeType.
-- An Id and timestamp will be automatically generated upon valid POST's.
+- Each item object must have: name, itemType, price.
+- An Id and timestamp will be automatically generated upon valid POST's. If an item is posted, an ID referencing its store will be created. An ID referencing the item will also be created and added to its specific store.
 
 To start, run:
 
