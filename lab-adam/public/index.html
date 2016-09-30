@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Cities and Stuff</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>Cities and Hospitals</h1>
+    <h3>Testing an API</h3>
+    <div>
+      <form id="create">
+        <input id="cityname" placeholder="City Name"></input>
+        <input id="population" placeholder="Population"></input>
+        <input id="rating" placeholder="Rating"></input>
+        <input id="lat" placeholder="Latitude"></input>
+        <input id="lng" placeholder="Longitude"></input>
+        <button id="submitcity">Submit</button>
+      </form>
+    </div>
+    <div id="results">
+    </div>
+  </body>
+  <script>
+  $('#create').submit(function(data) {
+    data.preventDefault();
+    var $inputs = $('#create :input');
+    var result = {}
+    result.name = $inputs[0].value;
+    result.population = $inputs[1].value;
+    result.rating = $inputs[2].value;
+    result.lat = $inputs[3].value;
+    result.lng = $inputs[4].value;
+
+    console.log(JSON.stringify(result));
+    // $.post( "api/city", function() {
+    //   result;
+    // });
+    //
+    $.ajax({
+      url: 'http://localhost:3000/api/city/',
+      type: 'POST',
+      data: JSON.stringify(result),
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      success: function(msg) {
+        alert('Returned object is', msg[0]);
+      }
+    });
+  });
+  </script>
+</html>
