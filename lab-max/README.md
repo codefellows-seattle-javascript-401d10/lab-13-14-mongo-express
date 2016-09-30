@@ -44,6 +44,8 @@ npm run start
 
 which will start our server.
 
+#Store Routes
+
 #GET
 
 A valid GET request should look like this, and result in a 200 status code:
@@ -107,3 +109,5 @@ A DELETE request resulting in a 400 status error will return if there was a bad 
 ```
 http DELETE localhost:3000/api/store
 ```
+
+#Item Routes

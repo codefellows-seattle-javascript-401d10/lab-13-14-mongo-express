@@ -16,6 +16,12 @@ const exampleStore = {
   storeType: 'sporting goods',
 };
 
+const exampleItem = {
+  name: 'shoe',
+  itemType: 'shoe',
+  price: 5,
+};
+
 describe('testing route /api/store', function(){
 
   describe('testing invalid route', function(){
@@ -37,6 +43,9 @@ describe('testing route /api/store', function(){
         new Store(exampleStore).save()
         .then( store => {
           this.tempStore = store;
+          return Store.findByIdAndAddItem(store._id, exampleItem);
+        })
+        .then(() => {
           done();
         })
         .catch(done);
@@ -60,6 +69,7 @@ describe('testing route /api/store', function(){
           expect(res.body.name).to.equal('nike');
           expect(res.body.year).to.equal(1964);
           expect(res.body.storeType).to.equal('sporting goods');
+          expect(res.body.items[0].name).to.equal(exampleItem.name);
           done();
         });
       });

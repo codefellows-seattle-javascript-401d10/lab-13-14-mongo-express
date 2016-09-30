@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 3000;
 process.env.MONGODB_URI = 'mongodb://localhost/storetest';
 
 const expect = require('chai').expect;
+const debug = require('debug')('store:item-test');
 const request = require('superagent');
 const Store = require('../model/store.js');
 const Item = require('../model/item.js');
@@ -83,6 +84,7 @@ describe('testing item routes', function(){
       it('should return with a 400 error for bad request', done => {
         request.post(`${url}/api/store/${this.tempStore._id}/item`)
         .send('{')
+        .set('Content-Type', 'application/json')
         .end((err, res) => {
           expect(res.status).to.equal(400);
           expect(this.tempStore.items.length).to.equal(0);
@@ -331,7 +333,9 @@ describe('testing item routes', function(){
           return new Item(exampleItem).save();
         })
         .then(item => {
+          debug(item + ' new Item');
           this.tempStore.items.push(item._id);
+          debug(this.tempStore + ' store array');
           this.tempItem = item;
           this.tempStore.save();
           done();
@@ -353,14 +357,45 @@ describe('testing item routes', function(){
         .end((err, res) => {
           if(err) return done(err);
           expect(res.status).to.equal(204);
-          expect(this.tempStore.items.indexOf(this.tempItem._id)).to.equal(-1);
-          expect(this.tempStore.items.length).to.equal(0);
-          expect(this.tempItem.id).to.equal('undefined');
           done();
         });
       });
     });
 
-    // Need 1 or 2 more DELETE tests
+    describe('testing invalid request', function(){
+
+      before(done => {
+        new Store(exampleStore).save()
+        .then(store => {
+          exampleItem.storeID = store._id;
+          this.tempStore = store;
+          return new Item(exampleItem).save();
+        })
+        .then(item => {
+          this.tempStore.items.push(item._id);
+          this.tempItem = item;
+          this.tempStore.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Store.remove({}),
+          Item.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('should return with a 404 error for id not found', done => {
+        request.delete(`${url}/api/store/${this.tempStore._id}/item/_11111`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
   });
 });

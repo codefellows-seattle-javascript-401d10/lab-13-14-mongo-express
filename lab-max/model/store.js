@@ -17,6 +17,16 @@ const storeSchema = Schema({
 
 const Store = module.exports = mongoose.model('store', storeSchema);
 
+Store.findByIdAndGetItem = function(storeID, itemID){
+  return Store.findById(storeID)
+  .then(store => {
+    if(store.items.indexOf(itemID) === -1){
+      Promise.reject();
+    }
+    return Item.findById(itemID);
+  });
+};
+
 Store.findByIdAndAddItem = function(id, item){
   debug('findByIdAndAddItem');
   return Store.findById(id)
@@ -33,5 +43,40 @@ Store.findByIdAndAddItem = function(id, item){
   })
   .then( () => {
     return this.tempItem;
+  });
+};
+
+Store.findByIdAndUpdateItem = function(storeID, itemID, item){
+  debug('findByIdAndUpdateItem');
+  return Store.findById(storeID)
+  .then(store => {
+    if(store.items.indexOf(itemID) === -1){
+      Promise.reject();
+    }
+  })
+  .then( () => {
+    return Item.findByIdAndUpdate(itemID, item, {new: true});
+  });
+};
+
+Store.findByIdAndDeleteItem = function(storeID, itemID){
+  debug('findByIdAndDeleteItem');
+  return Store.findById(storeID)
+  .then(store => {
+    if(store.items.indexOf(itemID) === -1){
+      Promise.reject();
+    }
+    debug('found store id');
+    for(var i=0;i<store.items.length;i++){
+      debug(store.items[i], 'value in store array');
+      if(store.items[i].toString() === itemID){
+        debug('conditional getting hit');
+        store.items.splice(i, 1);
+      }
+    }
+    return store.save();
+  })
+  .then(() => {
+    return Item.findByIdAndRemove(itemID);
   });
 };
