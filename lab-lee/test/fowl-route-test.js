@@ -7,16 +7,16 @@ const expect = require('chai').expect;
 const request = require('superagent');
 const Fowl = require('../model/fowl.js');
 
-require('../server.js');
-
-const url = `http://localhost:${PORT}`;
 const exampleFowl = {
   name: 'Jeff',
 };
+const url = `http://localhost:${PORT}`;
 
-describe('testing route /api/note', function() {
+require('../server.js');
 
-  describe('testing POST /api/duck requests', function() {
+describe('testing route /api/fowl', function() {
+
+  describe('testing POST /api/fowl requests', function() {
 
     describe('with valid body', function() {
 
@@ -95,7 +95,7 @@ describe('testing route /api/note', function() {
     describe('with a file that doesn\'t exist', function() {
 
       it('should give a 404 id not found', done => {
-        request.get(`${url}/api/fowl/nope-duck`)
+        request.get(`${url}/api/fowl/nope-fowl`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           done();
@@ -180,7 +180,7 @@ describe('testing route /api/note', function() {
     describe('with a body that doesn\'t exist', function() {
 
       it('should 404 not found', done => {
-        request.put(`${url}/api/fowl/nope-duck`)
+        request.put(`${url}/api/fowl/nope-fowl`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           done();
@@ -216,7 +216,7 @@ describe('testing route /api/note', function() {
     describe('with an id that doesn\'t exist', function() {
 
       it('should 404 not found', done => {
-        request.delete(`${url}/api/fowl/nope-duck`)
+        request.delete(`${url}/api/fowl/nope-fowl`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           done();
@@ -270,6 +270,45 @@ describe('testing route /api/note', function() {
           if (err) return done(err);
           expect(res.status).to.equal(200);
           expect(res.body.length).to.equal(50);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('testing POST /api/duck requests', function() {
+
+    describe('with valid body', function() {
+
+      after( done => {
+        if(this.tempFowl) {
+          Fowl.remove({})
+          .then(() => done())
+          .catch(done);
+          return;
+        }
+      });
+
+      it('should return a fowl and status 200', done => {
+        request.post(`${url}/api/fowl`)
+        .send(exampleFowl)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.name).to.equal('Jeff');
+          this.tempFowl = res.body;
+          done();
+        });
+      });
+    });
+
+    describe('with an invalid body', function() {
+
+      it('should return 400 bad request', done => {
+        request.post(`${url}/api/fowl`)
+        .send({name: ''})
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
           done();
         });
       });
