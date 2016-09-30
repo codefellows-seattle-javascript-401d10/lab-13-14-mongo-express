@@ -6,6 +6,7 @@ const debug = require('debug')('fowl:router');
 const createError = require('http-errors');
 
 const Fowl = require('../model/fowl.js');
+const pageMiddleware = require('../lib/page-middleware.js');
 
 const fowlRouter = module.exports = new Router();
 
@@ -25,10 +26,15 @@ fowlRouter.get('/api/fowl/:id', function(req, res, next) {
   .catch(err => next(createError(404, err.message)));
 });
 
-fowlRouter.get('/api/fowl', function(req, res, next) {
-  debug('hit route GETall');
-  Fowl.find()
-  .then(fowl => res.json(fowl))
+fowlRouter.get('/api/fowl', pageMiddleware, function(req, res, next) {
+  debug('hit route GET');
+  let offset = req.query.offset;
+  let pageSize = req.query.pagesize;
+  let page = req.query.page;
+
+  let skip = offset + pageSize * page;
+  Fowl.find().skip(skip).limit(pageSize)
+  .then( fowls => res.json(fowls))
   .catch(err => next(createError(404, err.message)));
 });
 
@@ -43,5 +49,8 @@ fowlRouter.put('/api/fowl/:id', jsonParser, function(req, res, next) {
   debug('hit route PUT /api/fowl/:id');
   Fowl.findByIdAndUpdate(req.params.id, req.body, {new: true})
   .then(fowl => res.json(fowl))
-  .catch(err => next(createError(404, err.message)));
+  .catch(err => {
+    if (err.name === 'ValidationError') return next(err);
+    next(createError(404, err.message));
+  });
 });

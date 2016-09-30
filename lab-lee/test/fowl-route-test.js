@@ -119,7 +119,6 @@ describe('testing route /api/note', function() {
       });
 
       after( done => {
-        delete exampleFowl.timestamp;
         if(this.tempFowl) {
           Fowl.remove({})
           .then(() => done())
@@ -137,7 +136,8 @@ describe('testing route /api/note', function() {
           if (err) return done(err);
           expect(res.status).to.equal(200);
           expect(res.body.name).to.equal('steve');
-          this.tempFowl = res.body;
+          let timestamp = new Date(res.body.timestamp);
+          expect(timestamp.toString()).to.equal(exampleFowl.timestamp.toString());
           done();
         });
       });
@@ -225,41 +225,53 @@ describe('testing route /api/note', function() {
     });
   });
 
-  describe('Testing GET with api/fowl to return the db', function() {
+  describe('Testing GET request with pageination', function(){
 
-    before( done => {
-      exampleFowl.timestamp = new Date();
-      new Fowl(exampleFowl).save()
-      .then( fowl => {
-        this.tempFowl = fowl;
-      })
-      .then( fowl => {
-        new Fowl(exampleFowl).save();
-        this.tempFowl2 = fowl;
-        done();
-      })
-      .catch(done);
-    });
+    describe('with a valid query', function() {
 
-    after( done => {
-      delete exampleFowl.timestamp;
-      if(this.tempFowl) {
-        Fowl.remove({})
-        .then(() => done())
+      before( done => {
+        var fowls = [];
+        for (var i = 0; i < 1000; i++) {
+          exampleFowl.timestamp = new Date();
+          fowls.push(new Fowl(exampleFowl).save());
+        }
+        Promise.all(fowls)
+        .then( fowls => {
+          this.tempFowls = fowls;
+          done();
+        })
         .catch(done);
-        return;
-      }
-      done();
-    });
+      });
 
-    it('should return an array with status 200.', done => {
-      request.get(`${url}/api/fowl`)
-      .end((err, res) => {
-        if (err) return done(err);
-        expect(res.status).to.equal(200);
-        expect(res.body.length).to.equal(2);
-        this.tempFowl = res.body;
+      after( done => {
+        delete exampleFowl.timestamp;
+        if(this.tempFowls) {
+          Fowl.remove({})
+          .then(() => done())
+          .catch(done);
+          return;
+        }
         done();
+      });
+
+      it('should return 50 fowls at page 0.', done => {
+        request.get(`${url}/api/fowl`)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.length).to.equal(50);
+          done();
+        });
+      });
+
+      it('should return 50 fowls at page 3.', done => {
+        request.get(`${url}/api/fowl?page=3`)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(200);
+          expect(res.body.length).to.equal(50);
+          done();
+        });
       });
     });
   });

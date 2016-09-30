@@ -22,8 +22,8 @@ mongoose.connect(MONGODB_URI);
 
 // app middleware
 const app = express();
-app.use(morgan('dev'));
 app.use(cors());
+app.use(morgan('dev'));
 
 // routes
 app.use(fowlRouter);
