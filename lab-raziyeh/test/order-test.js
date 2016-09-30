@@ -112,5 +112,32 @@ describe('Testing  API', function() {
         });
       });
     });
+
+    describe('Testing DELETE requests', function() {
+      describe('GET - test 204, Delete an Order with a valid order_id', function() {
+        before(done => {
+          new Customer(exampleCustomer).save()
+            .then(customer => {
+              this.tempCustomer = customer;
+              return Customer.findByIdAndAddOrder(customer._id, exampleOrder);
+            })
+            .then(order => {
+              this.tempOrder = order;
+              done();
+            })
+            .catch(done);
+        });
+
+        it('Expect to return 204 for a valid order_Id', done => {
+          request.delete(`${url}/api/order/${this.tempOrder._id}`)
+          .end((err, res) => {
+            if(err) done(err);
+            expect(res.status).to.equal(204);
+            expect(err).to.be.null;
+            done();
+          });
+        });
+      });
+    });
   });
 });

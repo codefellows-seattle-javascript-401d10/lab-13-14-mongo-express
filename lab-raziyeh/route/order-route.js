@@ -24,3 +24,9 @@ orderRouter.post('/api/customer/:customerID/order', jsonParser, function(req, re
   .catch(next);
 });
 
+orderRouter.delete('/api/order/:id', function(req, res, next) {
+  debug('/api/order DELETE request');
+  Order.findById(req.params.id)
+  .then( () => res.sendStatus(204))
+  .catch(err => next(createError(404, err.message)));
+});
