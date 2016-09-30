@@ -6,6 +6,7 @@ const debug = require('debug')('fowl:router');
 const createError = require('http-errors');
 
 const Fowl = require('../model/fowl.js');
+const pageMiddleware = require('../lib/page-middleware.js');
 
 const fowlRouter = module.exports = new Router();
 
@@ -25,17 +26,15 @@ fowlRouter.get('/api/fowl/:id', function(req, res, next) {
   .catch(err => next(createError(404, err.message)));
 });
 
-fowlRouter.get('/api/fowl', function(req, res, next) {
-  debug('hit route GETall');
-  Fowl.find()
-  .then(fowl => res.json(fowl))
-  .catch(err => next(createError(404, err.message)));
-});
+fowlRouter.get('/api/fowl', pageMiddleware, function(req, res, next) {
+  debug('hit route GET');
+  let offset = req.query.offset;
+  let pageSize = req.query.pagesize;
+  let page = req.query.page;
 
-fowlRouter.get('/api/fowl/10', function(req, res, next) {
-  debug('hit route GETall');
-  Fowl.find().limit(10)
-  .then(fowl => res.json(fowl))
+  let skip = offset + pageSize * page;
+  Fowl.find().skip(skip).limit(pageSize)
+  .then( fowls => res.json(fowls))
   .catch(err => next(createError(404, err.message)));
 });
 
