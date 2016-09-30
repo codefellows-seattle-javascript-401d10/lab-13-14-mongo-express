@@ -31,3 +31,25 @@ Fowl.findByIdAndAddDuck = function(id, duck) {
     return this.tempDuck;
   });
 };
+
+Fowl.findByIdAndDeleteDuck = function(id) {
+  return Duck.findById(id)
+  .catch(err => Promise.reject(err))
+  .then(duck => {
+    this.tempDuck = duck;
+    return Duck.remove(duck);
+  })
+  .catch(err => Promise.reject(createError(500, err.message)))
+  .then(() => {
+    return Fowl.findById(this.tempDuck.fowlID);
+  })
+  .catch(err => Promise.reject(err))
+  .then(fowl => {
+    for (var i = 0; i < fowl.ducks.length; i++) {
+      if (fowl.ducks[i] === id ) {
+        fowl.ducks.splice(i, 1);
+      }
+    }
+    return Fowl.findByIdAndUpdate(this.tempDuck.fowlID, fowl);
+  });
+};

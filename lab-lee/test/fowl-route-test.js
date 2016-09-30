@@ -74,8 +74,7 @@ describe('testing route /api/fowl', function() {
           this.tempFowl = fowl;
           return Fowl.findByIdAndAddDuck(fowl._id, exampleDuck);
         })
-        .then( duck => {
-          this.tempDuck = duck;
+        .then( () => {
           done();
         })
         .catch(done);
@@ -96,7 +95,6 @@ describe('testing route /api/fowl', function() {
         request.get(`${url}/api/fowl/${this.tempFowl._id}`)
         .end((err, res) => {
           if (err) return done(err);
-          console.log(res.body);
           expect(res.status).to.equal(200);
           expect(res.body.name).to.equal('Jeff');
           expect(res.body.ducks.length).to.equal(1);
