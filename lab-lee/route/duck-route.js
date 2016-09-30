@@ -30,3 +30,13 @@ duckRouter.delete('/api/duck/:id', function(req, res, next) {
   .then( () => res.sendStatus(204))
   .catch(err => next(createError(404, err.message)));
 });
+
+duckRouter.put('/api/duck/:id', jsonParser, function(req, res, next) {
+  debug('hit route PUT /api/fowl/:id');
+  Duck.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  .then(duck => res.json(duck))
+  .catch(err => {
+    if (err.name === 'ValidationError') return next(err);
+    next(createError(404, err.message));
+  });
+});
