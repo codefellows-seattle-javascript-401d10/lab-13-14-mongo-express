@@ -54,23 +54,23 @@ npm install -D gulp-eslint gulp-mocha mocha gulp chai
 - OR in terminal type: gulp
 
 
-- GET request: 
+- GET request:  
     ```http localhost:3000/api/order?id=selectedId ```
     ```http localhost:3000/api/customer?id=selectedId ```
 
 - POST request: 
-    ```echo '{"name":"yourname", "sex":"female/male"}' | http POST localhost:3000/api/person ```
+    - create a order or cusromer and save in mongo db
 
 - PUT request: 
-    ```echo '{"name":"yourname", "sex":"female/male"}' | http POST localhost:3000/api/person ```
+    - update a specific order 
 
 - DELETE request: 
-    ```http DELETE localhost:3000/api/person?id=selectedId ```
+   - remove a specific order and also remove the order_id from the customer model ( from orders array)
 
 ## Testing: 
 we have two models ( customer and order) , so we have tests for both models:
 
--  GET and POST requests :
+-  Tests:
     - test to ensure that  API returns a status code of 404 for routes that have not been registered
     - tests to ensure that **/api/person** endpoint responds as described for each condition below:
         - GET - test 404, responds with 'not found' for valid request made with an id that was not found
@@ -78,6 +78,7 @@ we have two models ( customer and order) , so we have tests for both models:
         - GET - test 200, response body like {<data>} for a request made with a valid id
         - POST - test 400, responds with 'bad request' for if no body provided or invalid body
         - POST - test 200, response body like {<data>} for a post request with a valid body
+        - PUT - test 200, response body like {<data>} for a post request with a valid body
         - DELETE - test 204
 
 ## Built With:

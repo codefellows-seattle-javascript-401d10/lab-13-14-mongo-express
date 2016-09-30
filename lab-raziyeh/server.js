@@ -1,7 +1,7 @@
 'use strict';
 
 // npm modules
-const cors = require('cors'); /****/
+const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -37,4 +37,4 @@ const server = module.exports = app.listen(PORT, function(){
   debug(`server up on ${PORT}`);
 });
 
-server.isRunning = true;  /****/
+server.isRunning = true; 
