@@ -24,6 +24,16 @@ orderRouter.post('/api/customer/:customerID/order', jsonParser, function(req, re
   .catch(next);
 });
 
+orderRouter.put('/api/order/:orderID', jsonParser, function(req, res, next) {
+  debug('PUT api/order/:orderID');
+  Order.findByIdAndUpdate(req.params.orderID, req.body, {new:true})
+  .then(order => res.json(order))
+  .catch(err => {
+    if(err.name === 'validationError') return next(err);
+    next(createError(404, err.message));
+  });
+});
+
 orderRouter.delete('/api/order/:id', function(req, res, next) {
   debug('/api/order DELETE request');
   Order.findById(req.params.id)

@@ -9,4 +9,4 @@ const orderSchema = Schema({
   customerID: { type:Schema.Types.ObjectId},
 });
 
-module.exports = mongoose.model('order', orderSchema);
+const Order = module.exports = mongoose.model('order', orderSchema);

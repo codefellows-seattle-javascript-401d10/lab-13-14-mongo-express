@@ -5,9 +5,8 @@ process.env.MONGODB_URI = 'mongodb://localhost/customertest';
 
 const expect = require('chai').expect;
 const request = require('superagent');
-
-const Order = require('../model/order.js');
 const Customer = require('../model/customer.js');
+const Order = require('../model/order.js');
 
 require('../server.js');
 
@@ -112,6 +111,53 @@ describe('Testing  API', function() {
         });
       });
     });
+
+    describe('Testing PUT requests', function() {
+      var tempOrder;
+      describe('PUT - test 200, response body like {<data>} for a post request with a valid body', () => {
+        before(done => {
+          new Order(exampleOrder).save()
+            .then(order => {
+              tempOrder = order;
+              done();
+            })
+            .catch(done);
+        });
+
+        it('Testing a PUT request made with a valid id', done => {
+          request.put(`${url}/api/order/${tempOrder._id}`)
+          .send({price:14000})
+          .end((err, res) => {
+            if(err) done(err);
+            expect(res.status).to.equal(200);
+            expect(res.body.price).to.equal(14000);
+            done();
+          });
+        });
+      });
+
+      describe('PUT - test 400, responds with \'bad request\' for if no body provided or invalid body', () => {
+        before(done => {
+          new Order(exampleOrder).save()
+            .then(order => {
+              this.tempOrder = order;
+              done();
+            })
+            .catch(done);
+        });
+        it('Testing a PUT request made with a no body', done => {
+          request.put(`${url}/api/order/${this.tempOrder._id}`)
+          .set('Content-Type', 'application/json')
+          .send('d')
+          .end((err, res) => {
+            expect(res.status).to.equal(400);
+            done();
+          });
+        });
+      });
+    });
+
+
 
     describe('Testing DELETE requests', function() {
       describe('GET - test 204, Delete an Order with a valid order_id', function() {
