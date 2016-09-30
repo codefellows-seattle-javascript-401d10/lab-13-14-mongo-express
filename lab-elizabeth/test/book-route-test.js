@@ -33,22 +33,21 @@ describe('testing book routes', function(){
       console.log('hitting before block');
       new Series(exampleSeries).save()
       .then(series => {
+        console.log('series', series);
+        exampleBook.seriesID = series._id;
         this.tempSeries = series;
-        exampleBook.seriesID = this.tempSeries._id;
+        return Series.findByIdAndAddBook(series._id, exampleBook);
+      })
+      .then(book => {
+        console.log('book', book);
+        this.tempBook = book;
         done();
       })
       .catch(done);
-      // new Book(exampleBook).save(function(err, exampleSeries))
-      // .then(book => {
-      //   console.log('book', book);
-      //   this.tempBook = book;
-      //   done();
-      // })
-      // .catch(done);
     });
 
     after(done => {
-      // console.log('hitting after block');
+      console.log('hitting after block');
       Promise.all([
         Series.remove({}),
         Book.remove({}),
@@ -62,15 +61,15 @@ describe('testing book routes', function(){
       .end((err, res) => {
         if(err) return done(err);
         expect(res.status).to.equal(200);
-        expect(res.body.seriesID).to.equal(this.tempSeries._id);
-        expect(res.body._id).to.equal(this.tempBook._id);
+        expect(res.body.seriesID).to.equal(this.tempSeries._id.toString());
+        expect(res.body._id).to.equal(this.tempBook._id.toString());
         done();
       });
     });
 
   });
 
-  // describe('testing POST requests', function(){
+  // // describe('testing POST requests', function(){
   //
   //   describe('with valid series.id and book.body', () => {
   //

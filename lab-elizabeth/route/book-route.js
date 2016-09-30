@@ -12,14 +12,14 @@ const bookRouter = module.exports = new Router();
 
 bookRouter.get('/api/series/:seriesID/book/:bookID', function(req, res, next){
   debug('bookRouter.get');
-  Series.findBookById(req.params.seriesID, req.params.bookID)
-  .then(book => Promise.resolve(book))
+  return Series.findBookById(req.params.seriesID, req.params.bookID)
+  .then(book => res.json(book))
   .catch(next);
 });
 
 bookRouter.post('/api/series/:seriesID/book', jsonParser, function(req, res, next){
   debug('bookRouter.post');
-  Series.findByIdAndAddBook(req.params.seriesID, req.body)
+  return Series.findByIdAndAddBook(req.params.seriesID, req.body)
   .then(book => res.json(book))
   .catch(next);
 });

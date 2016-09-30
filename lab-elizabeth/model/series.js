@@ -19,15 +19,11 @@ const Series = module.exports = mongoose.model('series', seriesSchema);
 Series.findBookById = function(seriesID, bookID){
   debug('findBookById');
   return Series.findById(seriesID)
-  .catch(err => Promise.reject(createError(404, err.message)))
   .then(series => {
     debug('series', series);
-    return series.books.findById[bookID];
+    return Book.findById(bookID);
   })
-  .then(book => {
-    debug('book', book);
-    return book;
-  });
+  .catch(err => Promise.reject(createError(404, err.message)));
 };
 
 Series.findByIdAndAddBook = function(seriesID, book){
@@ -48,5 +44,15 @@ Series.findByIdAndAddBook = function(seriesID, book){
   })
   .then(() => {
     return Promise.resolve(this.tempBook);
+  });
+};
+
+Series.findbyIdAndDeleteBook = function(seriesID, bookID){
+  debug('findbyIdAndDeleteBook');
+  return Series.findById(seriesID)
+  .catch(err => Promise.reject(createError(404, err.message)))
+  .then(series => {
+    debug('series', series);
+    Book.findByIdandRemove(bookID);
   });
 };

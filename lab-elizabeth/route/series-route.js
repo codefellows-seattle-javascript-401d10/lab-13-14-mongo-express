@@ -12,14 +12,14 @@ const seriesRouter = module.exports = new Router();
 
 seriesRouter.delete('api/series/:id', function(req, res, next){
   debug('running route DELETE api/series/:id');
-  Series.findByIdandRemove(req.params.id)
+  return Series.findByIdandRemove(req.params.id)
   .then(() => res.sendStatus(204).send())
   .catch(err => next(createError(404, err.message)));
 });
 
 seriesRouter.get('api/series/:id', function(req, res, next){
   debug('running route GET api/series/:id');
-  Series.findById(req.params.id)
+  return Series.findById(req.params.id)
   .populate('books')
   .then(series => res.json(series))
   .catch(err => next(createError(404, err.message)));
@@ -46,7 +46,7 @@ seriesRouter.post('api/series/', jsonParser, function(req, res, next){
 
 seriesRouter.put('api/series/:id', jsonParser, function(req, res, next){
   debug('running route PUT api/series/:id');
-  Series.findByIdandUpdate(req.params.id, req.body, {new: true})
+  return Series.findByIdandUpdate(req.params.id, req.body, {new: true})
   .then(series => res.json(series))
   .catch(err => {
     if(err.name === 'ValidationError') return next(err);
