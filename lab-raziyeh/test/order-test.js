@@ -5,10 +5,11 @@ process.env.MONGODB_URI = 'mongodb://localhost/customertest';
 
 const expect = require('chai').expect;
 const request = require('superagent');
+const debug = require('debug')('test:order');
+
 const Customer = require('../model/customer.js');
 const Order = require('../model/order.js');
-
-require('../server.js');
+const server = require('../server.js');
 
 const url = `http://localhost:${PORT}`;
 
@@ -28,12 +29,47 @@ const exampleCustomer = {
 describe('Testing  API', function() {
 
   describe('General Testing on API', function() {
-    it('Testing routes that have not been registered', done => {
-      request.get(`${url}/api/unRegistereg_URL`)
-      .end((err, res) => {
-        expect(res.status).to.be.equal(404);
-        expect(err).to.not.be.null;
+
+    describe('Testing for runinng server', function(){
+      before((done) => {
+        if (! server.isRunning) {
+          server.listen(PORT, () => {
+            server.isRunning = true;
+            debug(`server up ::: ${PORT}`);
+            done();
+          });
+          return;
+        }
         done();
+      });
+
+      // after((done) => {
+      //   debug('after module snack-roter');
+      //   if (server.isRunning) {
+      //     server.close(() => {
+      //       server.isRunning = false; 
+      //       debug('server down');
+      //       done();
+      //     });
+      //     return;
+      //   }
+      //   done();
+      // });
+
+      it('expect  to show server is running on: ', () => {
+        expect(server.isRunning).to.be.true;
+      });
+    });
+
+
+    describe('not registrede route', function(){
+      it('Testing routes that have not been registered', done => {
+        request.get(`${url}/api/unRegistereg_URL`)
+        .end((err, res) => {
+          expect(res.status).to.be.equal(404);
+          expect(err).to.not.be.null;
+          done();
+        });
       });
     });
   });
@@ -42,6 +78,7 @@ describe('Testing  API', function() {
     
     describe('Testing GET requests', function() {
       describe('GET - test 200, response body like {<data>} for a request made with a valid order_id', function() {
+
         before(done => {
           new Customer(exampleCustomer).save()
             .then(customer => {
@@ -53,6 +90,14 @@ describe('Testing  API', function() {
               done();
             })
             .catch(done);
+        });
+
+        after(done => {
+          Promise.all([
+            this.tempOrder.remove({})
+          ])
+          .then(() => done())
+          .catch(done);
         });
 
         it('Expect to return 200 for valid order_Id', done => {
@@ -150,7 +195,8 @@ describe('Testing  API', function() {
     });
 
     describe('Testing DELETE requests', function() {
-      describe('GET - test 204, Delete an Order with a valid order_id', function() {
+      describe('DELETE - test 204, Delete an Order with a valid order_id', function() {
+
         before(done => {
           new Customer(exampleCustomer).save()
             .then(customer => {
@@ -163,7 +209,7 @@ describe('Testing  API', function() {
             })
             .catch(done);
         });
-        
+
         after(done => {
           Promise.all([
             Customer.remove({}),

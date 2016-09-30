@@ -1,24 +1,22 @@
-# Mongo-Express
+# Mongo-Express - double resource express/mongo api
 =============
-Writing a REST API using Bluebird Promises.
+
 structures :
 
-
 - lib
-    - parse-json.js
-    - parse-url.js
-    - storage.js
-    - router.js
-    - response.js : a module for define responses (JSON / TEXT) from server.
+    - error-middleware.js
+    - page-middleware.js
 - model
-    - person.js
+    - customer.js
+    - order.js
 - route
-    - person-route.js
+    - customer-route.js
+    - order-route.js
 - test
-    - person-route-test.js
-- data
-    - schemaName (example:person)
-        - JSON files - created with POST request
+    - customer-route-test.js
+    - order-route-test.js
+- db
+ 
 - root 
     - server.js
     - gulpfile.js
@@ -27,11 +25,11 @@ structures :
     - README.md
 
 ## Getting Started
-- In terminal enter : node server.js 
+- In terminal enter : npm start
 - also you can run gulp 
 - for run tests in terminal enter:
     - gulp  OR
-    - mocha
+    - mocha / or  npm test / DEBUG=customer* mocha
 
 
 ### Prerequisities
@@ -39,7 +37,7 @@ structures :
 - dependencies: 
 
 ```
-npm install --save node-uuid superagent bluebird mkdirp-bluebird del 
+npm install --save node-uuid superagent bluebird mkdirp-bluebird del mongoose express
 
 ```
 
@@ -52,21 +50,27 @@ npm install -D gulp-eslint gulp-mocha mocha gulp chai
 
 ## Running
 
-- In your root server, type in the command **"node server.js"** in your terminal.
+- In your root server, type in the command **"npm start"** in your terminal.
 - OR in terminal type: gulp
 
 
 - GET request: 
-    ```http localhost:3000/api/person?id=selectedId ```
+    ```http localhost:3000/api/order?id=selectedId ```
+    ```http localhost:3000/api/customer?id=selectedId ```
 
 - POST request: 
+    ```echo '{"name":"yourname", "sex":"female/male"}' | http POST localhost:3000/api/person ```
+
+- PUT request: 
     ```echo '{"name":"yourname", "sex":"female/male"}' | http POST localhost:3000/api/person ```
 
 - DELETE request: 
     ```http DELETE localhost:3000/api/person?id=selectedId ```
 
-## Testing:
-- we have 6 tests for GET and POST requests :
+## Testing: 
+we have two models ( customer and order) , so we have tests for both models:
+
+-  GET and POST requests :
     - test to ensure that  API returns a status code of 404 for routes that have not been registered
     - tests to ensure that **/api/person** endpoint responds as described for each condition below:
         - GET - test 404, responds with 'not found' for valid request made with an id that was not found
@@ -78,6 +82,8 @@ npm install -D gulp-eslint gulp-mocha mocha gulp chai
 
 ## Built With:
 * Nodejs
+* express.js
+* Mongo / Mongoose
 * JavaScript
 * Visual studio code 3 
 

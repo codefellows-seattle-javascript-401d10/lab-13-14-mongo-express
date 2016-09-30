@@ -38,7 +38,7 @@ orderRouter.delete('/api/order/:id', function(req, res, next) {
   debug('/api/order DELETE request');
   return Order.findByIdAndRemove(req.params.id)
   .then( () => {
-    Customer.findByIdAndRemoveOrder(req.params.id);
+    Customer.findByIdAndRemoveOrderId(req.params.id);
   })
   .then( () => {
     res.sendStatus(204);

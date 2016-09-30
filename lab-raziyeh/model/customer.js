@@ -30,18 +30,18 @@ Customer.findByIdAndAddOrder = function(id, order) {
     this.tempOrder = order;
     return this.tempCustomer.save();
   })
-  .then( () => {
+  .then(() => {
     return this.tempOrder;
   });
 };
 
-Customer.findByIdAndRemoveOrder = function(orderID) {
+Customer.findByIdAndRemoveOrderId = function(orderID) {
   Customer.find({orders: {_id: orderID}})
   .then(customer => {
     customer.forEach( item => {
       item.orders.remove(orderID);
+      return item.save();
     });
-    return customer[0].save();
   });
 };
 
