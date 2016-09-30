@@ -6,7 +6,6 @@ const debug = require('debug')('store:item-route');
 const createError = require('http-errors');
 
 const Store = require('../model/store.js');
-const Item = require('../model/item.js');
 
 const itemRouter = module.exports = new Router();
 
