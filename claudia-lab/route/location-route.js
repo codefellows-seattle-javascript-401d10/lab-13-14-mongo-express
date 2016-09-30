@@ -29,9 +29,9 @@ locationRouter.get('/api/location/:id', function(req, res, next){
 });
 
 // delete an item from the database with a given id
-locationRouter.delete('/api/fruit/:fruitID/loca tion/:locationID', function(req, res, next){
+locationRouter.delete('/api/location/:locationID', function(req, res, next){
   debug('hit DELETE route');
-  Fruit.findByIdAndRemoveLocation(req.params.fruitID, req.params.locationID)
+  Fruit.findByIdAndRemoveLocation(req.params.locationID)
   .then(() => res.sendStatus(204))
   .catch(err => next(createError(404, err.message)));
 });

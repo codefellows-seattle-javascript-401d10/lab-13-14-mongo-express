@@ -144,7 +144,7 @@ describe('testing location routes', function(){
 
       //TESTING DELETE STATUS CODE 204
       it('should respond with 204 successful deletions', done => {
-        request.delete(`${url}/api/fruit/${this.tempFruit._id}/location/${this.tempLocation._id}`)
+        request.delete(`${url}/api/location/${this.tempLocation._id}`)
         .end((err, res) => {
           if (err) return done (err);
           expect(res.status).to.equal(204);

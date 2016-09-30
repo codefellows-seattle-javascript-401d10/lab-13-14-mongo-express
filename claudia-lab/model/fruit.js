@@ -21,7 +21,7 @@ Fruit.findByIdAndAddLocation = function(id, location){
   .then(fruit => { //make sure the list exists
     location.fruitID = fruit._id; //_id created by mongo
     this.tempFruit = fruit; //stores reference to fruit so it can be updated
-    //create a location and update list
+    //create a location and save list
     return new Location(location).save();
 
   })
@@ -35,19 +35,25 @@ Fruit.findByIdAndAddLocation = function(id, location){
   });
 };
 
-Fruit.findByIdAndRemoveLocation = function(locationId, fruitId){
-  return Fruit.findById(locationId)
-  .catch(err => Promise.reject(createError(404, err.message)))
-  .then(location => {
-    debug(location);
-    location.fruit = location.fruits.filter(_fruitId => {
-      if(_fruitId.toString() === fruitId) return false;
-      return true;
-    });
-    return location.save();
+Fruit.findByIdAndRemoveLocation = function(locationId){
+  return Location.findById(locationId) //returns location
+  .then( location => {
+    this.tempLocation = location; //gets reference to id at the location because its stored on the fruit and you need to remove if from location array on fruit
+    return Location.remove(this.tempLocation); //remove location
   })
   .then( () => {
-    return Fruit.remove({_id: fruitId});
+    debug('TEMPLOCATION', this.tempLocation);
+    return Fruit.findById(this.tempLocation.fruitID);
+  })
+  .catch(err => Promise.reject(createError(404, err.message)))
+  .then( fruit => {
+    debug('FRUIT', fruit);
+    for (var i = 0; i < fruit.locations.length; i++) {
+      if (fruit.locations[i]._id === this.tempLocation.fruitID) {
+        return fruit.locations.splice(i, 1);
+      }
+    }
+    fruit.save();
   });
 };
 
