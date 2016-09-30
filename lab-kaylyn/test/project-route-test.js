@@ -107,6 +107,17 @@ describe('testing project routes', function(){
           done();
         });
       });
+
+      describe('testing with GET invalid id', function(){
+        it('should return a status code of 404', done => {
+          request.get(`${url}/api/project/666`)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            done();
+          });
+        });
+      });
+
     });
   });
 

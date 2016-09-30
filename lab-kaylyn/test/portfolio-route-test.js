@@ -7,7 +7,6 @@ process.env.MONGODB_URI = 'mongodb://localhost/portfoliotest';
 const expect = require('chai').expect;
 const request = require('superagent');
 const Portfolio = require('../model/portfolio.js');
-const Project = require('../model/project.js');
 
 require('../server.js');
 
