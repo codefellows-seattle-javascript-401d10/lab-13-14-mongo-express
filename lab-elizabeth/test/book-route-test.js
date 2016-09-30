@@ -1,5 +1,7 @@
 'use strict';
 
+const debug = require('debug')('series:book-route-test');
+
 const PORT = process.env.PORT || 3000;
 process.env.MONGODB_URI = 'mongodb://localhost/booktest';
 
@@ -8,7 +10,7 @@ const request = require('superagent');
 const Series = require('../model/series.js');
 const Book = require('../model/book.js');
 
-require('../server');
+const server = require('../server');
 
 const url = `http://localhost:${PORT}`;
 
@@ -26,6 +28,31 @@ const exampleSeries = {
 };
 
 describe('testing book routes', function(){
+
+  before(done => {
+    debug('before book-router');
+    if(!server.isRunning) {
+      server.listen(PORT, () => {
+        server.isRunning = true;
+        debug(`server up, mate! <(0v0)> ${PORT}`);
+        done();
+      });
+      return;
+    }
+    done();
+  });
+
+  after(done => {
+    debug('after book-router');
+    if(server.isRunning){
+      server.close(() => {
+        server.isRunning = false;
+        debug('server down, mate. <(=v=)>');
+        done();
+      });
+      return;
+    }
+  });
 
   describe('testing DELETE requests', function(){
 

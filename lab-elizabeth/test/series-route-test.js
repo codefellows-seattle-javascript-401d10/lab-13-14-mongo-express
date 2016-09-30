@@ -1,5 +1,7 @@
 'use strict';
 
+const debug = require('debug')('series:series-route-test');
+
 const PORT = process.env.PORT || 3000;
 process.env.MONGODB_URI = 'mongodb://localhost/seriestest';
 
@@ -7,7 +9,7 @@ const expect = require('chai').expect;
 const request = require('superagent');
 const Series = require('../model/series');
 
-require('../server.js');
+const server = require('../server.js');
 
 const url = `http://localhost:${PORT}`;
 const exampleSeries = {
@@ -24,6 +26,31 @@ const exampleBook = {
 };
 
 describe('testing series routes', function(){
+
+  before(done => {
+    debug('before series-router');
+    if(!server.isRunning) {
+      server.listen(PORT, () => {
+        server.isRunning = true;
+        debug(`server up, mate! <(0v0)> ${PORT}`);
+        done();
+      });
+      return;
+    }
+    done();
+  });
+
+  after(done => {
+    debug('after series-router');
+    if(server.isRunning){
+      server.close(() => {
+        server.isRunning = false;
+        debug('server down, mate. <(=v=)>');
+        done();
+      });
+      return;
+    }
+  });
 
   describe('testing GET requests', function(){
 
