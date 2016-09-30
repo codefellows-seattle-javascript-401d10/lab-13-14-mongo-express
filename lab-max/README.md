@@ -104,10 +104,82 @@ A valid DELETE request should look like this, and result in a 204 status code:
 http DELETE localhost:3000/api/store/(some id in database)
 ```
 
-A DELETE request resulting in a 400 status error will return if there was a bad request. Meaning no id query was passed.
+A DELETE request resulting in a 404 status error will return if there was a bad request. Meaning no id was found.
 
 ```
-http DELETE localhost:3000/api/store
+http DELETE localhost:3000/api/store/11111
 ```
 
 #Item Routes
+
+#GET
+
+A valid GET request should look like this, and result in a 200 status code:
+
+```
+http localhost:3000/api/store/(storeID)/item/(itemID)
+```
+
+and that will return a single item.
+
+A GET request resulting in a 404 status error will return if an item at a specified id isn't found.
+
+```
+http localhost:3000/api/store/(storeID)/item/11111
+```
+
+#POST
+
+(To POST a new item, there must already by a Store to post to).
+
+A valid POST request should look like this, and result in a 200 status code:
+
+```
+echo '{"name": "soccer shoes", "itemType": "shoes", "price": 10}' | http localhost:3000/api/store/(storeID)/item
+```
+
+A POST request resulting in a 400 status error will return if there was a bad request. Meaning invalid body or no body was sent.
+
+```
+echo '{"name": "", "itemType": 2000, "price": ""}' | http localhost:3000/api/store/(storeID)/item
+```
+
+A POST request resulting in a 404 status error will return if there was an invalid storeID.
+
+```
+echo '{"name": "soccer shoes", "itemType": "shoes", "price": 10}' | http localhost:3000/api/store/111111/item
+```
+
+#PUT
+
+A valid PUT request should look like this, and result in a 200 status code:
+
+```
+echo '{"name": "soccer jersey", "itemType": "apparel", "price": 20}' | http PUT localhost:3000/api/store/(storeID)/item/(itemID)
+```
+
+A PUT request resulting in a 400 status error will return if there was a bad request. Meaning invalid or no body was sent.
+
+```
+echo '{"notName": "jersey", "itemType": 1, "price": "house"}' | http PUT localhost:3000/api/store/(storeID)/item/(itemID)
+```
+
+A PUT request resulting in a 404 status error will return if there was an invalid Id or Id not found.
+
+```
+echo '{"name": "soccer jersey", "itemType": "apparel", "price": 20}' | http PUT localhost:3000/api/store/(storeID)/item/111111
+```
+
+#DELETE
+
+A valid DELETE request should look like this, and result in a 204 status code:
+
+```
+http DELETE localhost:3000/api/store/(storeID)/item/(itemID)
+```
+
+A DELETE request resulting in a 404 status error will return if there was a bad request. Meaning no id was found.
+
+```
+http DELETE localhost:3000/api/store/(storeID)/item/111111
+```
