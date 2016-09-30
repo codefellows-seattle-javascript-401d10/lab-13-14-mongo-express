@@ -7,6 +7,7 @@ const expect = require('chai').expect;
 const request = require('superagent');
 const Fowl = require('../model/fowl.js');
 const Duck = require('../model/duck.js');
+const debug = require('debug')('duck:test');
 
 require('../server.js');
 
@@ -30,7 +31,7 @@ describe('testing duck routes', function() {
 
     describe('with valid fowl id and duckBody', function() {
 
-      before(done => {
+      before( done => {
         new Fowl(exampleFowl).save()
         .then( fowl => {
           this.tempFowl = fowl;
@@ -51,13 +52,24 @@ describe('testing duck routes', function() {
       it('should return a duck', done => {
         request.post(`${url}/api/fowl/${this.tempFowl.id}/duck`)
         .send(exampleDuck)
+        .end((err, res) => {
+          if(err) return done(err);
+          expect(res.body.status).to.equal(200);
+          expect(res.body.name).to.equal(exampleDuck.name);
+          expect(res.body.fowlID).to.equal(this.tempFowl._id.toString());
+          done();
+        });
+      });
+      describe('testing POST requests with invalid body or no body provided', () => {
+        it('should return a 400 bad request', done => {
+          request.post(`${url}/api/fowl/${this.tempFowl._id}/duck`)
+          .send('notjson')
+          .set('Content-Type', 'application/json')
           .end((err, res) => {
-            if(err) return done(err);
-            expect(res.body.name).to.equal(exampleDuck.name);
-            expect(res.body.fowlID).to.equal(this.tempFowl._id.toString());
+            expect(res.status).to.equal(400);
             done();
           });
-        done();
+        });
       });
     });
   });
