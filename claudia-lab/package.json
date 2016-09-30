@@ -1,0 +1,31 @@
+{
+  "name": "mongo-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts" : {
+    "test": "DEBUG='fruit*' ./node_modules/mocha/bin/mocha",
+    "start": "DEBUG='fruit*' node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "chai": "^3.5.0",
+    "mocha": "^3.1.0",
+    "superagent": "^2.3.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "debug": "^2.2.0",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.1",
+    "morgan": "^1.7.0",
+    "bluebird": "^3.4.6",
+    "node-uuid": "^1.4.7"
+  }
+}
