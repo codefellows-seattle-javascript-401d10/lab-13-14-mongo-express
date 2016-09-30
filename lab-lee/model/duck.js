@@ -8,5 +8,6 @@ const noteSchema = Schema({
   color: {type: String, required: true},
   feathers: {type: String, required: true},
   listID: {type: Schema.Types.ObjectId, required: true},
-  
 });
+
+mongoose.exports = mongoose.model('note', noteSchema);
