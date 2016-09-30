@@ -198,13 +198,95 @@ describe('Testing cat routes', function(){
       it('Should return a status of 404 and NotFoundError', done => {
         request.get(`${url}/api/cafe/${this.tempCat.cafeId}/cat/1234`)
         .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).to.equal(200);
-          expect(res.body.name).to.equal(this.tempCat.name);
+          expect(res.status).to.equal(404);
+          expect(res.text).to.equal('NotFoundError');
           done();
         });
       });
     });
 
+
+    describe('Testing GET with INVALID CAFE ID', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a status of 404 and NotFoundError', done => {
+        request.get(`${url}/api/cafe/1234/cat/${this.tempCat._id}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.text).to.equal('NotFoundError');
+          done();
+        });
+      });
+    });
+  });
+
+  describe('Testing DELETE routes', function(){
+
+    describe('Testing DELETE with VALID CAFE ID and VALID CAT ID', () => {
+
+      before(done => {
+        new Cafe(exampleCafe).save()
+        .then(cafe => {
+          exampleCat.cafeId = cafe._id;
+          this.tempCafe = cafe;
+          return new Cat(exampleCat).save();
+        })
+        .then(cat => {
+          this.tempCafe.cats.push(cat._id);
+          this.tempCat = cat;
+          this.tempCafe.save();
+          done();
+        })
+        .catch(done);
+      });
+
+      after(done => {
+        Promise.all([
+          Cafe.remove({}),
+          Cat.remove({}),
+        ])
+        .then(() => done())
+        .catch(done);
+      });
+
+      it('Should return a status of 204 and then doublecheck to ensure the ID has been removed from the cats array', done => {
+        let tempId = this.tempCat._id;
+        request.delete(`${url}/api/cafe/${this.tempCat.cafeId}/cat/${this.tempCat._id}`)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).to.equal(204);
+          request.get(`${url}/api/cafe/${this.tempCat.cafeId}`)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.body.cats.indexOf(tempId)).to.equal(-1);
+            done();
+          });
+        });
+      });
+    });
   });
 });

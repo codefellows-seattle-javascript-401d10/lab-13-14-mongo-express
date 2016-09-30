@@ -33,3 +33,18 @@ Cafe.findByIdAndAddCat = function(id, cat) {
     return this.tempCat;
   });
 };
+
+Cafe.findByIdAndRemoveCat = function(cafeId, catId) {
+  debug('Hit Cafe.findByIdAndRemoveCat');
+  return Cafe.findById(cafeId)
+  .catch(err => Promise.reject(createError(404, err.message)))
+  .then(cafe => {
+    console.log('cafe before', cafe);
+    console.log('cafe.cats before ', cafe.cats);
+    let arrayIndex = cafe.cats.indexOf(catId);
+    cafe.cats.splice(arrayIndex, 1);
+    console.log('cafe.cats after', cafe.cats);
+    console.log('cafe after', cafe);
+    return Cat.findByIdAndRemove(catId);
+  });
+};
