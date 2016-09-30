@@ -10,4 +10,4 @@ const hospitalSchema = Schema({
   cityID: {type: Schema.Types.ObjectId, required: true},
 });
 
-const Hospital = module.exports = mongoose.model('hospital', hospitalSchema);
+module.exports = mongoose.model('hospital', hospitalSchema);

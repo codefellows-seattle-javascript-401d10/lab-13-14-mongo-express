@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 const debug = require('debug')('city:server');
 const cityRouter = require('./route/city-route.js');
 const errorHandler = require('./lib/error-handler.js');
-const pageMiddleware = require('./lib/page-middleware.js');
 const hospitalRouter = require('./route/hospital-route.js');
 
 const PORT = process.env.PORT || 3000;
