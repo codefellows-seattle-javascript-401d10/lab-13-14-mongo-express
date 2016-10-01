@@ -166,12 +166,6 @@ describe('testing duck routes', function() {
       .catch(done);
     });
 
-    after( done => {
-      Fowl.remove({})
-      .then(() => done())
-      .catch(done);
-    });
-
     describe('with valid duck id', () => {
 
       it('should delete a duck', done => {
