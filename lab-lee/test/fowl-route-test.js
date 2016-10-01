@@ -6,7 +6,6 @@ process.env.MONGODB_URI = 'mongodb://localhost/fowltest';
 const expect = require('chai').expect;
 const request = require('superagent');
 const Fowl = require('../model/fowl.js');
-const Duck = require('../model/duck.js');
 
 const exampleFowl = {
   name: 'Jeff',
