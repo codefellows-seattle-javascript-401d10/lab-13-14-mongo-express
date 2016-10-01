@@ -156,6 +156,7 @@ describe('testing duck routes', function() {
       new Fowl(exampleFowl).save()
       .then( fowl => {
         this.tempFowl = fowl;
+        debug('tempFowl', this.tempFowl);
         return Fowl.findByIdAndAddDuck(fowl._id, exampleDuck);
       })
       .then( duck => {
@@ -166,13 +167,16 @@ describe('testing duck routes', function() {
     });
 
     after( done => {
-      Promise.all([
-        Fowl.remove({}),
-        Duck.remove({}),
-      ])
-      .then(() => done())
-      .catch(done);
+      delete exampleFowl.timestamp;
+      if(this.tempFowl) {
+        Fowl.remove({})
+        .then(() => done())
+        .catch(done);
+        return;
+      }
+      done();
     });
+
 
     describe('with valid duck id', () => {
 
