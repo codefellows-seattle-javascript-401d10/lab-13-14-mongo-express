@@ -156,13 +156,21 @@ describe('testing duck routes', function() {
       new Fowl(exampleFowl).save()
       .then( fowl => {
         this.tempFowl = fowl;
-        debug('tempFowl', this.tempFowl);
         return Fowl.findByIdAndAddDuck(fowl._id, exampleDuck);
       })
       .then( duck => {
         this.tempDuck = duck;
         done();
       })
+      .catch(done);
+    });
+
+    after( done => {
+      Promise.all([
+        Fowl.remove({}),
+        Duck.remove({}),
+      ])
+      .then(() => done())
       .catch(done);
     });
 
