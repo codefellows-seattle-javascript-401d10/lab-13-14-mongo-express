@@ -25,9 +25,9 @@ duckRouter.get('/api/duck/:id', function(req, res, next) {
 });
 
 duckRouter.delete('/api/duck/:id', function(req, res, next) {
-  debug('hit GET for api/duck/:id');
+  debug('hit DELETE for api/duck/:id');
   debug('req.params.id', req.params.id);
-  return Fowl.findByIdAndDeleteDuck(req.params.id)
+  Fowl.findByIdAndDeleteDuck(req.params.id)
   .then( () => res.sendStatus(204))
   .catch(err => next(createError(404, err.message)));
 });

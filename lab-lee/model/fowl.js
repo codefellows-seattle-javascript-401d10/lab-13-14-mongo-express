@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const createError = require('http-errors');
+const debug = require('debug')('fowl:fowl');
 
 const Duck = require('./duck.js');
 
@@ -33,23 +34,26 @@ Fowl.findByIdAndAddDuck = function(id, duck) {
 };
 
 Fowl.findByIdAndDeleteDuck = function(id) {
+  debug('id insert', id);
   return Duck.findById(id)
   .catch(err => Promise.reject(err))
   .then(duck => {
     this.tempDuck = duck;
-    return Duck.remove(duck);
+    Duck.remove(duck);
   })
   .catch(err => Promise.reject(createError(500, err.message)))
   .then(() => {
+    debug('this.tempDuck.fowlID', this.tempDuck.fowlID);
     return Fowl.findById(this.tempDuck.fowlID);
   })
   .catch(err => Promise.reject(err))
   .then(fowl => {
     for (var i = 0; i < fowl.ducks.length; i++) {
-      if (fowl.ducks[i] === id ) {
+      debug('fowl.ducks', fowl.ducks[i]);
+      if (fowl.ducks[i].toString() === id.toString()) {
         fowl.ducks.splice(i, 1);
       }
     }
-    return Fowl.findByIdAndUpdate(this.tempDuck.fowlID, fowl);
+    return Fowl.findByIdAndUpdate(this.tempDuck.fowlID, fowl, {new: true});
   });
 };
