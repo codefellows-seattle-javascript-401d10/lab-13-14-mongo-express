@@ -7,7 +7,6 @@ const expect = require('chai').expect;
 const request = require('superagent');
 const Fowl = require('../model/fowl.js');
 const Duck = require('../model/duck.js');
-const debug = require('debug')('fowl:ducktest');
 
 require('../server.js');
 
@@ -86,7 +85,6 @@ describe('testing duck routes', function() {
           .send('notjson')
           .set('Content-Type', 'application/json')
           .end((err, res) => {
-            debug('being hit');
             expect(res.status).to.equal(400);
             done();
           });
@@ -102,7 +100,6 @@ describe('testing duck routes', function() {
       new Fowl(exampleFowl).save()
       .then( fowl => {
         this.tempFowl = fowl;
-        debug('tempFowl', this.tempFowl);
         return Fowl.findByIdAndAddDuck(fowl._id, exampleDuck);
       })
       .then( duck => {
@@ -140,7 +137,6 @@ describe('testing duck routes', function() {
         it('should return a 404 not found', done => {
           request.get(`${url}/api/duck/noduck`)
           .end((err, res) => {
-            debug('being hit', res.body);
             expect(res.status).to.equal(404);
             done();
           });
@@ -156,7 +152,6 @@ describe('testing duck routes', function() {
       new Fowl(exampleFowl).save()
       .then( fowl => {
         this.tempFowl = fowl;
-        debug('tempFowl', this.tempFowl);
         return Fowl.findByIdAndAddDuck(fowl._id, exampleDuck);
       })
       .then( duck => {
@@ -177,7 +172,6 @@ describe('testing duck routes', function() {
       done();
     });
 
-
     describe('with valid duck id', () => {
 
       it('should delete a duck', done => {
@@ -189,7 +183,7 @@ describe('testing duck routes', function() {
         });
       });
 
-      describe('testing DELETE requests with invalid duck id', () => {
+      describe('testing DELETE requests with invalid duck id', function() {
 
         it('should return a 404 not found', done => {
           request.delete(`${url}/api/duck/noduck`)
