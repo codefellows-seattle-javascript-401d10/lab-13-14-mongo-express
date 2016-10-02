@@ -3,8 +3,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const createError = require('http-errors');
-const debug = require('debug')('fowl:fowl');
-
 const Duck = require('./duck.js');
 
 const fowlSchema = Schema({
