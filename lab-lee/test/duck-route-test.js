@@ -183,7 +183,7 @@ describe('testing duck routes', function() {
         });
       });
 
-      describe('testing DELETE requests with invalid duck id', function() {
+      describe('testing DELETE requests with invalid duck id', () => {
 
         it('should return a 404 not found', done => {
           request.delete(`${url}/api/duck/noduck`)

@@ -34,9 +34,8 @@ Fowl.findByIdAndAddDuck = function(id, duck) {
 };
 
 Fowl.findByIdAndDeleteDuck = function(id) {
-  debug('id insert', id);
   return Duck.findById(id)
-  .catch(err => Promise.reject(err))
+  // .catch(err => Promise.reject(err))
   .then(duck => {
     this.tempDuck = duck;
     Duck.remove(duck);
