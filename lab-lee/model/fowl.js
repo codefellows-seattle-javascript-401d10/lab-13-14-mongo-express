@@ -35,24 +35,20 @@ Fowl.findByIdAndAddDuck = function(id, duck) {
 
 Fowl.findByIdAndDeleteDuck = function(id) {
   return Duck.findById(id)
-  // .catch(err => Promise.reject(err))
   .then(duck => {
     this.tempDuck = duck;
-    Duck.remove(duck);
+    return Duck.remove(this.tempDuck);
   })
-  .catch(err => Promise.reject(createError(500, err.message)))
   .then(() => {
-    debug('this.tempDuck.fowlID', this.tempDuck.fowlID);
     return Fowl.findById(this.tempDuck.fowlID);
   })
   .catch(err => Promise.reject(err))
   .then(fowl => {
     for (var i = 0; i < fowl.ducks.length; i++) {
-      debug('fowl.ducks', fowl.ducks[i]);
-      if (fowl.ducks[i].toString() === id.toString()) {
-        fowl.ducks.splice(i, 1);
+      if (fowl.ducks[i].toString() === id.toString() ) {
+        return fowl.ducks.splice(i, 1);
       }
     }
-    return Fowl.findByIdAndUpdate(this.tempDuck.fowlID, fowl, {new: true});
+    return Fowl.findByIdAndUpdate(this.tempDuck.fowlID, fowl);
   });
 };
