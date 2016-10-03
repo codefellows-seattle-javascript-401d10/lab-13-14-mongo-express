@@ -28,25 +28,26 @@ describe('testing duck routes', function() {
 
   describe('testing POST requests', function() {
 
-    describe('with valid fowl id and duckBody', function() {
+    before( done => {
+      new Fowl(exampleFowl).save()
+      .then( fowl => {
+        this.tempFowl = fowl;
+        done();
+      })
+      .catch(done);
+    });
 
-      before( done => {
-        new Fowl(exampleFowl).save()
-        .then( fowl => {
-          this.tempFowl = fowl;
-          done();
-        })
-        .catch(done);
-      });
+    after( done => {
+      Promise.all([
+        Fowl.remove({}),
+        Duck.remove({}),
+      ])
+      .then(() => done())
+      .catch(done);
+    });
 
-      after( done => {
-        Promise.all([
-          Fowl.remove({}),
-          Duck.remove({}),
-        ])
-        .then(() => done())
-        .catch(done);
-      });
+    describe('with valid fowl id and duckBody', () => {
+
 
       it('should return a duck', done => {
         request.post(`${url}/api/fowl/${this.tempFowl._id}/duck`)
@@ -60,24 +61,7 @@ describe('testing duck routes', function() {
         });
       });
 
-      describe('testing POST requests with invalid body or no body provided', function() {
-
-        before( done => {
-          new Fowl(exampleFowl).save()
-          .then( fowl => {
-            this.tempFowl = fowl;
-            done();
-          })
-          .catch(done);
-        });
-
-        after( done => {
-          Promise.all([
-            Fowl.remove({}),
-          ])
-          .then(() => done())
-          .catch(done);
-        });
+      describe('testing POST requests with invalid body or no body provided', () => {
 
         it('should return a 400 bad request', done => {
 
