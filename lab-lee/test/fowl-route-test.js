@@ -117,27 +117,28 @@ describe('testing route /api/fowl', function() {
 
   describe('Testing PUT /api/fowl:id requests', function() {
 
-    describe('with valid id', function() {
-
-      before( done => {
-        exampleFowl.timestamp = new Date();
-        new Fowl(exampleFowl).save()
-        .then( fowl => {
-          this.tempFowl = fowl;
-          done();
-        })
-        .catch(done);
-      });
-
-      after( done => {
-        if(this.tempFowl) {
-          Fowl.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
+    before( done => {
+      exampleFowl.timestamp = new Date();
+      new Fowl(exampleFowl).save()
+      .then( fowl => {
+        this.tempFowl = fowl;
         done();
-      });
+      })
+      .catch(done);
+    });
+
+    after( done => {
+      if(this.tempFowl) {
+        Fowl.remove({})
+        .then(() => done())
+        .catch(done);
+        return;
+      }
+      done();
+    });
+
+    describe('with valid id', () => {
+
 
       it('should return a fowl with a status 200', done => {
         let updateData = {name:'steve'};
@@ -154,28 +155,7 @@ describe('testing route /api/fowl', function() {
       });
     });
 
-    describe('with no body provided', function() {
-
-      before( done => {
-        exampleFowl.timestamp = new Date();
-        new Fowl(exampleFowl).save()
-        .then( fowl => {
-          this.tempFowl = fowl;
-          done();
-        })
-        .catch(done);
-      });
-
-      after( done => {
-        delete exampleFowl.timestamp;
-        if(this.tempFowl) {
-          Fowl.remove({})
-          .then(() => done())
-          .catch(done);
-          return;
-        }
-        done();
-      });
+    describe('with no body provided', () => {
 
       it('should return a 400 bad request', done => {
         request.put(`${url}/api/fowl/${this.tempFowl._id}`)
