@@ -1,3 +1,6 @@
+# Other
+
+db
 
 # Created by https://www.gitignore.io/api/linux,node,osx,vim,sublimetext,windows
 
@@ -155,5 +158,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-db

@@ -80,6 +80,7 @@ describe('testing series routes', function(){
       });
 
       it('should return a series', done => {
+        console.log(this.tempSeries);
         request.get(`${url}/api/series/${this.tempSeries._id}`)
         .end((err, res) => {
           if (err) return done(err);
@@ -96,21 +97,21 @@ describe('testing series routes', function(){
       describe('with valid query', function(){
 
         before(done => {
-          var seriess = [];
-          for (var i = 0; i < 1000; i++){
+          let seriess = [];
+          for (var i = 0; i < 100; i++){
             seriess.push(new Series(exampleSeries).save());
           }
 
           Promise.all(seriess)
           .then(seriess => {
-            this.tempSeries = seriess;
+            this.tempSeriess = seriess;
             done();
           })
           .catch(done);
         });
 
         after(done => {
-          if(this.tempSeries){
+          if(this.tempSeriess){
             Series.remove({})
             .then(() => done())
             .catch(done);
@@ -122,6 +123,7 @@ describe('testing series routes', function(){
         it('should return 50 series', done => {
           request.get(`${url}/api/series`)
           .end((err, res) => {
+            console.log('res.body.length', res.body.length);
             if(err) return done(err);
             expect(res.status).to.equal(200);
             expect(res.body.length).to.equal(50);

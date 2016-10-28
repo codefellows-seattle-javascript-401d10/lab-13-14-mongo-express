@@ -12,6 +12,9 @@ const bookRouter = module.exports = new Router();
 bookRouter.delete('/api/series/:seriesID/book/:bookID', function(req, res, next){
   debug('delete');
   return Series.findbyIdAndDeleteBook(req.params.seriesID, req.params.bookID)
+  .then(() => {
+    res.sendStatus(204);
+  })
   .catch(next);
 });
 

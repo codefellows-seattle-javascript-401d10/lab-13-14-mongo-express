@@ -66,6 +66,7 @@ describe('testing book routes', function(){
           return Series.findByIdAndAddBook(series._id, exampleBook);
         })
         .then(book => {
+          console.log(book);
           this.tempBook = book;
           done();
         })
@@ -82,6 +83,7 @@ describe('testing book routes', function(){
       });
 
       it('should delete a book', done => {
+        console.log(this.tempSeries, this.tempBook);
         request.delete(`${url}/api/series/${this.tempSeries._id}/book/${this.tempBook._id}`)
         .end((err, res) => {
           if(err) return done(err);

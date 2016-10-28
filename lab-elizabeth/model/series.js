@@ -46,9 +46,21 @@ Series.findByIdAndAddBook = function(seriesID, book){
 
 Series.findbyIdAndDeleteBook = function(seriesID, bookID){
   debug('findbyIdAndDeleteBook');
-  return Series.findById(seriesID)
+  return Book.findById(bookID)
+  .then(book => {
+    return Book.remove(book);
+  })
   .then(() => {
-    return Book.findByIdandRemove(bookID);
+    return Series.findById(seriesID);
+  })
+  .then(series => {
+    for(var i = 0; i < series.books.length; i++){
+      if(series.books[i]._id === bookID){
+        console.log('series.books[i]._id', series.books[i]._id);
+        series.books.splice(i, (i + 1));
+      }
+    }
+    return series.update();
   })
   .catch(err => Promise.reject(createError(404, err.message)));
 };
