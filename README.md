@@ -19,10 +19,10 @@
  * have a lint task for running eslint
  * have a test task for running mocha
  * have a default task for running the lint and mocha tasks
-* a reademe with a project discription and api docs
+ * a readme with a project description and api docs
 
 # Directions
-* Create these directories to organize your code: 
+* Create these directories to organize your code:
  * db - use the command `mongod --dbpath ./db` to start mongod using this directory
  * lib
  * model
@@ -41,18 +41,18 @@
  * pass data as stringifed json in the body of a post request to create a resource
 
 ### `/api/model-name/:id`
-* `GET` request 
+* `GET` request
  * pass the id of a resource though the url endpoint to `req.params` to fetch a model   
 * `PUT` request
  * pass data as stringifed json in the body of a put request to update a resource
 * `DELETE` request
  * pass the id of a resource though the url endpoint to `req.params` to delete a model   
 
-## Tests 
+## Tests
 * your tests should start your server when they begin and stop your server when they finish
 * write a test to ensure that your api returns a status code of 404 for routes that have not been registered
 * write tests to ensure your `/api/model-name` endpoint responds as described for each condition below:
- * `GET` - test 200, response body like `{<data>}` for a request made with a valid id 
+ * `GET` - test 200, response body like `{<data>}` for a request made with a valid id
  * `GET` - test 404, responds with 'not found' for valid request made with an id that was not found
  * `PUT` - test 200, response body like  `{<data>}` for a post request with a valid body
  * `PUT` - test 400, responds with 'bad request' for if no `body provided` or `invalid body`
