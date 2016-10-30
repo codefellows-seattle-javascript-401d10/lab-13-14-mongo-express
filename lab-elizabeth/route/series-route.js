@@ -32,7 +32,6 @@ seriesRouter.get('/api/series', pageMiddleware, function(req, res, next){
   let page = req.query.page;
 
   let skip = offset + pageSize * page;
-  console.log(pageSize, 'alsdkfjaboialkajelknasdfaibu');
   Series.find().skip(skip).limit(pageSize)
   .then(series => res.json(series))
   .catch(next);

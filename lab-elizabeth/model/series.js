@@ -56,7 +56,6 @@ Series.findbyIdAndDeleteBook = function(seriesID, bookID){
   .then(series => {
     for(var i = 0; i < series.books.length; i++){
       if(series.books[i]._id === bookID){
-        console.log('series.books[i]._id', series.books[i]._id);
         series.books.splice(i, (i + 1));
       }
     }
